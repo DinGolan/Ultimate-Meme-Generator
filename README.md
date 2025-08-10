@@ -1,4 +1,4 @@
-# Ultimate Meme Generator – Sprint 2
+# Ultimate Meme Generator - Sprint 2
 
 ## 📌 Overview 📌
 The **Ultimate Meme Generator** is a web application that allows users to select an image, add custom text, and download their personalized meme.  
