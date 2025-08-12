@@ -2,14 +2,81 @@
 /* Ultimate Meme Generator */
 /***************************/
 
+/**
+ * [TODO] :
+ * [1] - Fix The Issue with Folders.
+ * [2] - Divide the function per folders.
+ **/
+
 // Global Variables //
-var gImgCount    = 18;
-var gSelectedImg = null;
+var gImgCount     = 18;
+var gSelectedImg  = null;
+const folderPaths = ['img/meme_imgs_square', 'img/meme_imgs_aspect_ratios'];
 
 // Function Implementations //
-function onInit() {
-    renderEmptyGallery();
-    renderEmptyEditor();
+async function onInit() {
+    try {
+        await updateImgCount();
+        renderGallery();
+        renderEmptyEditor();
+    } catch (err) {
+        console.error('Error Counting Images : ', err.message);
+        
+        const elGalleryContainer     = document.querySelector('.gallery-container');
+        elGalleryContainer.innerHTML = `<p>[Error] No Images Found to Display ...</p>`;
+    }
+}
+
+function updateImgCount() {
+
+    // Edge Case - Convert to List //
+    if (!Array.isArray(folderPaths)) folderPaths = [folderPaths];
+
+    return new Promise(async (resolve, reject) => {
+        try {
+            let totalCount = 0;
+
+            for (let path of folderPaths) {
+                const count = await countImagesInFolder(path);
+                totalCount += count;
+            }
+
+            if (totalCount > 0) {
+                gImgCount = totalCount;
+                resolve(totalCount);
+            } else {
+                reject(new Error(
+                    '[Error] No Images Found In Provided Folders ...'
+                ));
+            }
+
+        } catch (err) {
+            reject(err);
+        }
+    });
+}
+
+function countImagesInFolder(folderPath) {
+    return new Promise((resolve) => {
+        let count = 0;
+        let index = 1;
+
+        function checkNext() {
+            const img  = new Image();
+            img.src    = `${folderPath}/${index}.jpg`;
+            img.onload = () => {
+                count++;
+                index++;
+                checkNext();
+            };
+
+            img.onerror = () => {
+                resolve(count);
+            }
+        }
+
+        checkNext();
+    });
 }
 
 function renderGallery() {
@@ -17,7 +84,6 @@ function renderGallery() {
     
     let strHTML = '';
 
-    // [TODO] - Make gImgCount (Dynamic) //
     for (let i = 1; i <= gImgCount; i++) {
         strHTML += `<img src="img/meme_imgs_square/${i}.jpg" 
                          alt="Meme - ${i}"
