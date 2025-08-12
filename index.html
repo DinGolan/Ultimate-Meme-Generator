@@ -9,10 +9,34 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ultimate Meme Generator</title>
+    <link rel="stylesheet" href="css/main.css" />
 </head>
 
-<body>
+<body onload="onInit()">
     
+    <!-- Header -->
+    <header>
+        <h1>Meme Generator</h1>
+    </header>
+
+    <!-- Main -->
+    <main>
+
+        <!-- Gallery -->
+        <section class="gallery-section">
+            <h2>Image Gallery</h2>
+            <div class="gallery-container"></div>
+        </section>
+
+        <!-- Editor -->
+        <section class="editor-section">
+            <h2>Meme Editor</h2>
+            <div class="editor-container"></div>
+        </section>
+    </main>
+
+    <!-- Script -->
+    <script src="js/main.js"></script>
 </body>
 
 </html>
