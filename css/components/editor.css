@@ -1,0 +1,19 @@
+/***************************/
+/* Ultimate Meme Generator */
+/***************************/
+
+.editor-container {
+    background-color: #f9f9f9;
+    min-height: 200px;
+    padding: 10px;
+}
+
+.meme-canvas {
+    display: block;
+    margin-bottom: 10px;
+}
+
+.meme-text-input,
+.meme-color-input {
+    margin: 5px;
+}

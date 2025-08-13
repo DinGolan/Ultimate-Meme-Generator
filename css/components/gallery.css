@@ -2,31 +2,6 @@
 /* Ultimate Meme Generator */
 /***************************/
 
-body {
-    margin: 0;
-    font-family: Arial, sans-serif;
-    padding: 0;
-}
-
-header {
-    background-color: #ff8c00;
-    color: white;
-    padding: 1rem;
-    text-align: center;
-}
-
-main {
-    display: flex;
-    flex-direction: column;
-    gap: 2rem;
-    padding: 1rem;
-}
-
-section {
-    border: 1px solid #ccc;
-    padding: 1rem;
-}
-
 .gallery-container,
 .editor-container {
     background-color: #f9f9f9;

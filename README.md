@@ -1,8 +1,8 @@
 # Ultimate Meme Generator - Sprint 2
 
 ## 📌 Overview 📌
-The **Ultimate Meme Generator** is a web application that allows users to select an image, add custom text, and download their personalized meme.  
-The app consists of two main UI sections - **Image Gallery** and **Meme Editor** - both implemented on the same web page.  
+The **Ultimate Meme Generator** is a web application that allows users to select an image, add custom text, and download their personalized meme.
+The app consists of two main UI sections - **Image Gallery** and **Meme Editor** - both implemented on the same web page.
 
 Users Can :
 - Choose an image from the gallery or upload their own.
@@ -45,7 +45,7 @@ Users Can :
 ---
 
 ## ▶ Live Demo ▶
-You can view the live app via **GitHub Pages** (after deployment).  
+You can view the live app via **GitHub Pages** (after deployment).
 Example :
 - https://dingolan.github.io/Ultimate-Meme-Generator/
 
