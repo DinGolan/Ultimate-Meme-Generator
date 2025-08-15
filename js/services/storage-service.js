@@ -5,7 +5,8 @@
 /*==============================*/
 /*      GLOBAL VARIABLES        */
 /*==============================*/
-const MEME_STORAGE_KEY = 'savedMeme';
+const MEME_STORAGE_KEY    = 'savedMeme';
+const GALLERY_STORAGE_KEY = 'savedGallery';
 
 /*===========================*/
 /*      LOCAL STORAGE        */
@@ -36,6 +37,13 @@ function saveToStorage(key, value) {
 }
 
 function loadFromStorage(key) {
-    const data = localStorage.getItem(key);
-    return data ? JSON.parse(data) : null;
+    const data       = localStorage.getItem(key);
+    const parsedData = data ? JSON.parse(data) : null;
+
+    if (key === GALLERY_STORAGE_KEY && parsedData) {
+        gImages = parsedData;
+        buildKeywordSearchCountMap();
+    }
+
+    return parsedData;
 }

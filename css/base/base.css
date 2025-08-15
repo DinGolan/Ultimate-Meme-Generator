@@ -51,3 +51,41 @@ button[disabled]:hover {
     background-color: #ccc;
     cursor: not-allowed;
 }
+
+.btn {
+    border: none;
+    border-radius: 20px;
+    color: white;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background-color 0.2s ease;
+    text-decoration: none;
+}
+
+.btn-inline {
+    align-items: center;
+    display: inline-flex;
+    justify-content: center;
+    margin: 15px 5px;
+}
+
+.btn-block {
+    display: block;
+    margin: 15px 0;
+}
+
+.btn-blue {
+    background-color: #4a90e2;
+}
+
+.btn-blue:hover {
+    background-color: #357ab8;
+}
+
+.btn-lg-padding {
+    padding: 10px 16px;
+}
+
+.btn-md-padding {
+    padding: 8px 16px;
+}

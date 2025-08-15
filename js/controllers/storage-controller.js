@@ -7,6 +7,7 @@
 /*==============================*/
 function onSaveMeme() {
     saveMeme();
+    onRemoveSharedButtons();
     renderSavedMemes();
 }
 

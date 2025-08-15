@@ -9,7 +9,7 @@
 }
 
 .editor-section h2 {
-    margin-bottom: 5px;
+    margin-bottom: 0;
 }
 
 .editor-container {
@@ -26,13 +26,21 @@
     margin-bottom: 10px;
 }
 
-.meme-text-input,
-.meme-color-input {
-    margin: 5px;
+.editor-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+    margin-bottom: 5px;
+    margin-left: -7px;
 }
 
 .editor-placeholder {
     padding: 10px;
+}
+
+.meme-text-input,
+.meme-color-input {
+    margin: 5px;
 }
 
 .stickers-container {
@@ -54,4 +62,17 @@
 
 .btn-sticker:hover {
     transform: scale(1.2);
+}
+
+.btn-image-url,
+.btn-facebook {
+    background-color: #4267B2;
+    font-weight: bold;
+    max-width: fit-content;
+    white-space: nowrap;
+}
+
+.btn-image-url:hover,
+.btn-facebook:hover {
+    background-color: #365899;
 }

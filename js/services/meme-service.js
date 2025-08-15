@@ -14,38 +14,40 @@ const DEFAULT_COLOR     = '#ffffff';
 const DEFAULT_FONT      = 'Impact';
 const DEFAULT_ALIGN     = 'center';
 const DEFAULT_PADDING   = 10;
+const DEFAULT_FORMAT    = 'jpeg';
 
 /*==============================*/
 /*      GLOBAL STATE OBJECT     */
 /*==============================*/
-var gMeme = {
-    selectedImageId: null,
-    selectedLineIdx: 0,
-    lines: [
-        {
-            text:  DEFAULT_TEXT,
-            size:  DEFAULT_LINE_SIZE,
-            color: DEFAULT_COLOR,
-            x:     DEFAULT_CORD,
-            y:     DEFAULT_CORD,
-            font:  DEFAULT_FONT,
-            align: DEFAULT_ALIGN
-        }
-    ]
-};
+var gMeme      = null;
+var gDragState = null;
 
-var gDragState = {
-    isDragging: false,
-    draggedLineIdx: null,
-    dragOffsetX: 0,
-    dragOffsetY: 0
-};
+initMeme(null);
+initDragState();
 
 /*==============================*/
 /*    BASIC GETTERS / SETTERS   */
 /*==============================*/
 function getMeme() {
     return gMeme;
+}
+
+function initMeme(selectedImageId, text = DEFAULT_TEXT) {
+     gMeme = {
+        selectedImageId: selectedImageId,
+        selectedLineIdx: 0,
+        lines : [
+            {
+                text:  text,
+                size:  DEFAULT_LINE_SIZE,
+                color: DEFAULT_COLOR,
+                x:     DEFAULT_CORD,
+                y:     DEFAULT_CORD,
+                font:  DEFAULT_FONT,
+                align: DEFAULT_ALIGN
+            }
+        ]
+    };
 }
 
 function setLineText(newText) {
@@ -392,6 +394,15 @@ function isPointInLineBox(x, y, line) {
 /*=============================*/
 /*     DRAG & DROP - MOUSE     */
 /*=============================*/
+function initDragState() {
+    gDragState = {
+        isDragging: false,
+        draggedLineIdx: null,
+        dragOffsetX: 0,
+        dragOffsetY: 0
+    };
+}
+
 function getCanvasCoords(event) {
     const rect   = event.target.getBoundingClientRect();
     const scaleX = event.target.width  / rect.width;
@@ -409,4 +420,93 @@ function getCanvasCoords(event) {
             y: (event.clientY - rect.top)  * scaleY
         };
     }
+}
+
+/*================*/
+/*     UPLOAD     */
+/*================*/
+async function uploadImage(imageDataUrl, onSuccess) {
+    const CLOUD_NAME  = 'webify';
+    const PRESET_NAME = 'webify';
+    const UPLOAD_URL = `https://api.cloudinary.com/v1_1/${CLOUD_NAME}/image/upload`;
+
+    const formData = new FormData();
+    formData.append('file', imageDataUrl);
+    formData.append('upload_preset', PRESET_NAME);
+
+    try {
+        const res = await fetch(UPLOAD_URL, {
+            method: 'POST',
+            body: formData
+        });
+
+        const data = await res.json();
+
+        onSuccess(data.secure_url);
+    } catch(error) {
+        console.error(`[Error] Upload Failed : ${error}`);
+    }
+}
+
+/*===============*/
+/*     SHARE     */
+/*===============*/
+function detectImageFormat() {
+    let extension = DEFAULT_FORMAT;
+    let format    = `image/${DEFAULT_FORMAT}`;
+
+    const selectedImage = getImageById(gMeme.selectedImageId);
+    if (selectedImage && selectedImage.url) {
+        const lowerUrl = selectedImage.url.toLowerCase();
+        if (lowerUrl.endsWith('.png')) {
+            extension = 'png';
+            format    = `image/${extension}`;
+        }
+        else if (lowerUrl.endsWith('.jpg')) {
+            extension = 'jpg';
+            format    = `image/${extension}`;
+        }
+    }
+
+    return { format, extension };
+}
+
+function shareCanvasBlob(elCanvas, format, extension) {
+    const dataUrl = elCanvas.toDataURL(format);
+
+    const byteString  = atob(dataUrl.split(',')[1]);
+    const mimeString  = dataUrl.split(',')[0].split(':')[1].split(';')[0];
+    const arrayBuffer = new ArrayBuffer(byteString.length);
+    const intArray    = new Uint8Array(arrayBuffer);
+
+    for (let i = 0; i < byteString.length; i++) {
+        intArray[i] = byteString.charCodeAt(i);
+    }
+
+    const blob = new Blob([arrayBuffer], { type: mimeString });
+    const file = new File([blob], `meme.${extension}`, { type: format });
+
+    if (!navigator.canShare || !navigator.canShare({ files: [file] })) {
+        console.warn('[Warning] Sharing Files Isn\'t Supported on This Browser / Device ...');
+
+        const isFallback = true;
+        onDownloadMeme(extension, isFallback);
+        return;
+    }
+
+    navigator.share({
+        title: 'My Meme',
+        text: 'Check Out My Meme!',
+        files: [file]
+    })
+    .catch(error => {
+        if (error.name === 'AbortError' || error.name === 'NotAllowedError') {
+            console.warn('[Warning] User Canceled or Sharing was Blocked ...');
+        } else {
+            console.error(`[Error] Share Failed: ${error}`);
+        }
+
+        const isFallback = true;
+        onDownloadMeme(extension, isFallback);
+    });
 }

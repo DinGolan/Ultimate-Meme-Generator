@@ -169,6 +169,9 @@ function getKeywordsForImage(imageId) {
         case 43:
             return ['buzz', 'woody', 'meme'];
 
+        case 44:
+            return ['angry', 'yelling', 'meme'];
+
         default:
             return emptyList;
     }
@@ -193,9 +196,9 @@ function buildKeywordSearchCountMap() {
 function getRandomText() {
     const randTexts = [
         '😎 Life is Good 😎',
-        '🫢 Oops ... 🫢',
+        '🤗 Oops ... 🤗',
         '🤠 Feeling Awesome ! 🤠',
-        '🫣 Why Not ? 🫣'
+        '🧐 Why Not ? 🧐'
     ];
 
     const randIdx  = Math.floor(Math.random() * randTexts.length);
@@ -211,9 +214,9 @@ function extractKeywordsFromImages(images) {
     const keywordsList = [];
 
     if (Array.isArray(images)) {
-        for (const img of images) {
-            if (Array.isArray(img.keywords)) {
-                for (const keyword of img.keywords) {
+        for (const image of images) {
+            if (Array.isArray(image.keywords)) {
+                for (const keyword of image.keywords) {
                     const cleanKeyword = String(keyword).trim();
                     if (cleanKeyword) keywordsList.push(cleanKeyword);
                 }
@@ -222,4 +225,81 @@ function extractKeywordsFromImages(images) {
     }
 
     return keywordsList;
+}
+
+/*========================*/
+/*   UPLOAD FROM DEVICE   */
+/*========================*/
+function isValidFile(file) {
+    const allowedTypes = ['image/png', 'image/jpg', 'image/jpeg'];
+    const maxSizeMB    = 5;
+    const isValidType  = allowedTypes.includes(file.type);
+    const isValidSize  = (file.size / (1024 ** 2)) <= maxSizeMB;
+    return isValidType && isValidSize;
+}
+
+function handleImageLoad(image, fileName) {
+    if (isDuplicateImage(fileName)) {
+        alert('[Warning] This Image Already Exist In Gallery ...');
+        return;
+    }
+
+    addImageToGalleryList(image, fileName);
+    saveToStorage(GALLERY_STORAGE_KEY, gImages);
+
+    const newImageId = gImages[gImages.length - 1].id;
+    initMeme(newImageId);
+    initDragState();
+
+    const elCanvas = document.querySelector('.meme-canvas');
+    if (!elCanvas) {
+        renderMemeEditor();
+    }
+
+    onLoadImageToCanvas(image);
+    renderGallery(gImages);
+    onInitGalleryFilter();
+}
+
+function isDuplicateImage(fileName) {
+    return gImages.some(image => image.url.endsWith(fileName));
+}
+
+function addImageToGalleryList(image, fileName) {
+    const objectUrl = image.src;
+    const newId     = gImages.length ? gImages[gImages.length -1].id + 1 : 1;
+
+    gImages.push({
+        id: newId,
+        url: objectUrl,
+        keywords: getRandomKeywords()
+    });
+
+    buildKeywordSearchCountMap();
+}
+
+function getRandomKeywords() {
+    const COUNT = 3;
+
+    const possibleKeywords = [
+        'angry' , 'awesome' , 'baby'  ,
+        'cat'   , 'crazy'   , 'cute'  ,
+        'dog'   , 'epic'    , 'funny' ,
+        'happy' , 'lol'     , 'love'  ,
+        'meme'  , 'movie'   , 'random',
+        'sports', 'trending', 'wow'
+    ];
+
+    const selected    = [];
+    const usedIndexes = new Set();
+
+    while (selected.length < COUNT && usedIndexes.size < possibleKeywords.length) {
+        const randIdx = Math.floor(Math.random() * possibleKeywords.length);
+        if (!usedIndexes.has(randIdx)) {
+            selected.push(possibleKeywords[randIdx]);
+            usedIndexes.add(randIdx);
+        }
+    }
+
+    return selected;
 }

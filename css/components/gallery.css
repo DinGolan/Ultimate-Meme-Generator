@@ -3,7 +3,7 @@
 /***************************/
 
 .gallery-section h2 {
-    margin-bottom: 5px;
+    margin-bottom: 10px;
 }
 
 .gallery-container {
@@ -25,34 +25,20 @@
     border-color: #ff8c00;
 }
 
+.gallery-actions {
+    margin-left: -5px;
+}
+
 .gallery-message {
     display: block;
     grid-column: 1 / -1;
     text-align: left;
 }
 
-.btn-flexible {
-    border: none;
-    border-radius: 20px;
-    background-color: #4a90e2;
-    color: white;
-    cursor: pointer;
-    display: block;
-    font-size: 14px;
-    margin: 15px 0 15px 0;
-    padding: 8px 16px;
-    transition: background-color 0.2s ease;
-}
-
-.btn-flexible:hover {
-    background-color: #357ab8;
-}
-
 .gallery-filter {
     align-items: center;
     display: flex;
     gap: 5px;
-    margin-bottom: 10px;
 }
 
 .gallery-search {
@@ -65,17 +51,21 @@
 .clear-filter {
     border: none;
     border-radius: 4px;
-    background-color: #e74c3c;
+    background-color: #e53935;
     color: #fff;
     cursor: pointer;
     padding: 5px 8px;
 }
 
-.clear-filter:hover:not(.disabled) {
-    background-color: #c0392b;
+.clear-filter:hover:not(:disabled) {
+    background-color: #d32f2f;
 }
 
 .clear-filter.disabled {
     cursor: not-allowed;
     opacity: 0.6;
+}
+
+.file-upload-from-device {
+    display: none;
 }

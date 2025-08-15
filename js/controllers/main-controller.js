@@ -7,6 +7,8 @@
  * (1) - Resolve the text wrapping issue (search for occurrences of the keyword `Wrap`).
  * (2) - Check the image resolution when I’m in mobile mode,
  *       meaning the canvas isn’t quite proportional when viewed on a mobile device.
+ * (3) - Investigate Web Share API behavior.
+ * (4) - Check MQ.css (Desktop Behavior).
  **/
 
 'use strict';
@@ -16,7 +18,12 @@
 /*==============================*/
 async function onInit() {
     try {
-        await updateImageList();
+        const hasLocalImages = loadFromStorage(GALLERY_STORAGE_KEY);
+
+        if (!hasLocalImages) {
+            await updateImageList();
+        }
+
         renderGallery();
         onInitGalleryFilter();
         renderEmptyEditor();

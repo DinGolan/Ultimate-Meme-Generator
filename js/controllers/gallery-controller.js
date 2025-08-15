@@ -77,8 +77,9 @@ function renderGallery(images = gImages) {
 /*==============================*/
 function onImageSelect(imageId) {
     setImage(imageId);
-    renderMemeEditor();
     onResetTextInput();
+    onRemoveSharedButtons();
+    renderMemeEditor();
 }
 
 function onRandomMeme() {
@@ -88,23 +89,10 @@ function onRandomMeme() {
     const randImage = gImages[randIdx];
 
     const randText = getRandomText();
+    initMeme(randImage.id, randText);
+    initDragState();
 
-    gMeme = {
-        selectedImageId: randImage.id,
-        selectedLineIdx: 0,
-        lines : [
-            {
-                text:  randText,
-                size:  DEFAULT_LINE_SIZE,
-                color: DEFAULT_COLOR,
-                x:     DEFAULT_CORD,
-                y:     DEFAULT_CORD,
-                font:  DEFAULT_FONT,
-                align: DEFAULT_ALIGN
-            }
-        ]
-    };
-
+    onRemoveSharedButtons();
     renderMemeEditor();
 }
 
@@ -142,6 +130,8 @@ function onGallerySuggest(value) {
     elDataList.innerHTML = matches
                            .map(keyword => `<option value="${keyword}"></option>`)
                            .join(DEFAULT_TEXT);
+
+    onToggleClearButton(value);
 }
 
 function onGallerySearch(searchValue) {
@@ -149,16 +139,18 @@ function onGallerySearch(searchValue) {
     const term    = (searchValue || DEFAULT_TEXT).toLowerCase().trim();
 
     if (!term) {
+        onToggleClearButton(searchValue);
         renderGallery(gImages);
         return;
     }
 
-    const filteredImages = gImages.filter(img =>
-        (img.keywords || emptyList).some(keyword => String(keyword)
-                                             .toLowerCase()
-                                             .includes(term))
+    const filteredImages = gImages.filter(image =>
+        (image.keywords || emptyList).some(keyword => String(keyword)
+                                                      .toLowerCase()
+                                                      .includes(term))
     );
 
+    onToggleClearButton(searchValue);
     renderGallery(filteredImages);
 }
 
@@ -166,6 +158,8 @@ function onClearGalleryFilter() {
     const elGallerySearch = document.querySelector('.gallery-search');
     elGallerySearch.value = DEFAULT_TEXT;
     onGallerySuggest(DEFAULT_TEXT);
+    onToggleClearButton(DEFAULT_TEXT);
+    onRemoveSharedButtons();
     renderGallery(gImages);
 }
 
@@ -173,5 +167,52 @@ function onToggleClearButton(value) {
     const elClear    = document.querySelector('.clear-filter');
     const isEmpty    = !(value.trim());
     elClear.disabled = isEmpty;
-    elClear.computedStyleMap.cursor = isEmpty ? 'not-allowed' : 'pointer';
+    elClear.style.cursor = isEmpty ? 'not-allowed' : 'pointer';
+}
+
+/*========================*/
+/*   UPLOAD FROM DEVICE   */
+/*========================*/
+function onTriggerUploadFromDevice() {
+    const elFileInput = document.querySelector('.file-upload-from-device');
+    if (elFileInput) elFileInput.click();
+}
+
+function onUserUploadImage(externalEvent) {
+    const file = externalEvent.target.files[0];
+    if (!file) return;
+
+    if (!isValidFile(file)) {
+        alert('[Error] Invalid Type File of File Size ...');
+        return;
+    }
+
+    const reader  = new FileReader();
+    reader.onload = function(internalEvent) {
+        const image  = new Image();
+        image.onload = () => handleImageLoad(image, file.name);
+        image.src    = internalEvent.target.result;
+    };
+
+    reader.readAsDataURL(file);
+}
+
+function onLoadImageToCanvas(image) {
+    gMeme.selectedImgId = null;
+    gMeme.image         = image;
+
+    const elCanvas = document.querySelector('.meme-canvas');
+    if (!elCanvas) {
+        console.error('[Error] Element Not Found ...');
+        return;
+    }
+
+    const context  = elCanvas.getContext('2d');
+
+    elCanvas.width  = image.width;
+    elCanvas.height = image.height;
+
+    context.drawImage(image, 0, 0, elCanvas.width, elCanvas.height);
+
+    onDrawMeme();
 }

@@ -31,23 +31,6 @@
     transform: scale(1.05);
 }
 
-.btn-save-meme {
-    border: none;
-    border-radius: 20px;
-    background-color: #4a90e2;
-    color: white;
-    cursor: pointer;
-    display: block;
-    font-size: 14px;
-    margin: 15px 0 15px 0;
-    padding: 8px 16px;
-    transition: background-color 0.2s ease;
-}
-
-.btn-save-meme:hover {
-    background-color: #357ab8;
-}
-
 .saved-meme-card {
     display: inline-block;
     margin: 5px;

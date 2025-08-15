@@ -55,7 +55,7 @@ function renderMemeEditor() {
 
             <!-- Position Arrows -->
             <button onclick="onMoveLine('up')">↑</button>
-            <button onclick="onMoveLine('down')">↓</button>            
+            <button onclick="onMoveLine('down')">↓</button>
 
             <!-- Add / Delete -->
             <button onclick="onAddLine()">Add Line</button>
@@ -244,14 +244,30 @@ function onDecreaseFont() {
 /*==============================*/
 /*     CANVAS / UI ACTIONS      */
 /*==============================*/
-function onDownloadMeme() {
-    let elCanvas  = document.querySelector('.meme-canvas');
-    let link      = document.createElement('a');
-    link.download = 'new-meme.jpg';
-    link.href     = elCanvas.toDataURL('image/jpeg');
+function onDownloadMeme(format = DEFAULT_FORMAT, isFallback = false) {
+    const allowedFormat = ['png', 'jpg', 'jpeg'];
+    format = format.toLowerCase();
+
+    if (!allowedFormat.includes(format)) {
+        alert('[Warning] Only [png, jpg, jpeg] formats are allowed ...');
+        return;
+    }
+
+    let elCanvas = document.querySelector('.meme-canvas');
+    if (!elCanvas) {
+        console.error('[Error] No Canvas Found for Download ...');
+        return;
+    }
+
+    let link  = document.createElement('a');
+    link.href = elCanvas.toDataURL(`image/${format}`);
+
+    link.download = `new-meme.${format}`;
     link.click();
 
-    onResetTextInput();
+    if (!isFallback) {
+        onResetTextInput();
+    }
 }
 
 function onAddLine() {
@@ -336,7 +352,10 @@ function onDeleteLine() {
 
 function onAddSticker(sticker) {
     addLine(sticker);
-    onUpdateEditorInputs();
+
+    const elMemeTextInput = document.querySelector('.meme-text-input');
+    if (elMemeTextInput) elMemeTextInput.value = DEFAULT_TEXT;
+
     onDrawMeme();
     onUpdateSwitchLineButton();
 }
@@ -379,7 +398,7 @@ function onCanvasTouchMove(event) {
 
     const { x, y } = getCanvasCoords(event);
     dragTo(x, y);
-    
+
     event.preventDefault();
 }
 
@@ -413,5 +432,79 @@ function dragTo(x, y) {
 
 function stopDragging() {
     gDragState.isDragging     = false;
-    gDragState.draggedLineIdx = null; 
+    gDragState.draggedLineIdx = null;
+}
+
+/*================*/
+/*     UPLOAD     */
+/*================*/
+function onUploadMeme(event) {
+    event.preventDefault();
+
+    const elCanvas = document.querySelector('.meme-canvas');
+    if (!elCanvas) {
+        alert('[Warning] No Meme Canvas Found to Upload ...');
+        return;
+    }
+
+    const imageDataUrl = elCanvas.toDataURL(`image/${DEFAULT_FORMAT}`);
+
+    function onSuccess(uploadedImageUrl) {
+        const encodedUploadedImageUrl = encodeURIComponent(uploadedImageUrl);
+        const elEditorButtons         = document.querySelector('.editor-buttons');
+
+        const elBtnImageUrl  = elEditorButtons.querySelector('.btn-image-url');
+        const elBtnFacebook  = elEditorButtons.querySelector('.btn-facebook');
+        const isButtonExists = elBtnImageUrl && elBtnFacebook;
+
+        if (!isButtonExists) {
+            elEditorButtons.insertAdjacentHTML('beforeend', `
+                <a href="${uploadedImageUrl}" class="btn btn-inline btn-lg-padding btn-image-url" target="_blank">Image URL</a>
+                <button class="btn btn-inline btn-lg-padding btn-facebook"
+                        onclick="onUploadToFacebook('${encodedUploadedImageUrl}')">
+                    Share on Facebook
+                </button>
+            `);
+        }
+    }
+
+    uploadImage(imageDataUrl, onSuccess);
+}
+
+function onUploadToFacebook(encodedUrl) {
+    window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodedUrl}&t=${encodedUrl}`);
+}
+
+function onRemoveSharedButtons() {
+    const elEditorButtons = document.querySelector('.editor-buttons');
+    if (!elEditorButtons) return;
+
+    const elImageUrlBtn = elEditorButtons.querySelector('.btn-image-url');
+    const elFacebookBtn = elEditorButtons.querySelector('.btn-facebook');
+
+    if (elImageUrlBtn) elImageUrlBtn.remove();
+    if (elFacebookBtn) elFacebookBtn.remove();
+}
+
+/*===============*/
+/*     SHARE     */
+/*===============*/
+function onWebShare() {
+    const elCanvas = document.querySelector('.meme-canvas');
+    if (!elCanvas) {
+        alert('[Error] No Meme to Share ...');
+        return;
+    }
+
+    const { format, extension } = detectImageFormat();
+
+    if (!navigator.share) {
+        alert('[Info] Web Share API Isn\'t Supported In the Browser ...');
+
+        const isFallback = true;
+        onDownloadMeme(extension, isFallback);
+        return;
+    }
+
+    shareCanvasBlob(elCanvas, format, extension);
 }
