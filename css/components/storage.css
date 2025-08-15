@@ -1,0 +1,91 @@
+/***************************/
+/* Ultimate Meme Generator */
+/***************************/
+
+.saved-memes-section {
+    box-sizing: border-box;
+    max-width: 800px;
+    height: 100%;
+    width: 100%;
+}
+
+.saved-memes-section h2 {
+    margin-bottom: 5px;
+}
+
+.saved-memes-container {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.saved-memes-container img {
+    border: 2px solid black;
+    cursor: pointer;
+    height: auto;
+    margin: 5px;
+    transition: transform 0.2s ease;
+    width: 120px;
+}
+
+.saved-memes-container img:hover {
+    transform: scale(1.05);
+}
+
+.btn-save-meme {
+    border: none;
+    border-radius: 20px;
+    background-color: #4a90e2;
+    color: white;
+    cursor: pointer;
+    display: block;
+    font-size: 14px;
+    margin: 15px 0 15px 0;
+    padding: 8px 16px;
+    transition: background-color 0.2s ease;
+}
+
+.btn-save-meme:hover {
+    background-color: #357ab8;
+}
+
+.saved-meme-card {
+    display: inline-block;
+    margin: 5px;
+    position: relative;
+}
+
+.saved-meme-card img {
+    border: 2px solid black;
+    display: block;
+    height: auto;
+    transition: transform 0.2s ease;
+    width: 120px;
+}
+
+.saved-meme-card img:hover {
+    transform: scale(1.03);
+}
+
+.saved-meme-delete {
+    align-items: center;
+    border: none;
+    border-radius: 50%;
+    background-color: rgba(0, 0, 0, 0.7);
+    color: white;
+    cursor: pointer;
+    display: flex;
+    font-size: 14px;
+    height: 24px;
+    justify-content: center;
+    line-height: 1;
+    padding: 0;
+    position: absolute;
+    right: 0;
+    top: 0;
+    transform: translate(50%, -50%);
+    width: 24px;
+}
+
+.saved-meme-delete:hover {
+  background: #ff4d4f;
+}

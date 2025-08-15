@@ -2,23 +2,80 @@
 /* Ultimate Meme Generator */
 /***************************/
 
-.gallery-container,
-.editor-container {
-    background-color: #f9f9f9;
-    display: flex;
-    flex-wrap: wrap;
+.gallery-section h2 {
+    margin-bottom: 5px;
+}
+
+.gallery-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
     gap: 10px;
-    min-height: 200px;
 }
 
 .gallery-container img {
     border: 2px solid transparent;
     cursor: pointer;
+    display: block;
     height: 150px;
     object-fit: cover;
-    width: 150px;
+    width: 100%;
 }
 
 .gallery-container img:hover {
     border-color: #ff8c00;
+}
+
+.gallery-message {
+    display: block;
+    grid-column: 1 / -1;
+    text-align: left;
+}
+
+.btn-flexible {
+    border: none;
+    border-radius: 20px;
+    background-color: #4a90e2;
+    color: white;
+    cursor: pointer;
+    display: block;
+    font-size: 14px;
+    margin: 15px 0 15px 0;
+    padding: 8px 16px;
+    transition: background-color 0.2s ease;
+}
+
+.btn-flexible:hover {
+    background-color: #357ab8;
+}
+
+.gallery-filter {
+    align-items: center;
+    display: flex;
+    gap: 5px;
+    margin-bottom: 10px;
+}
+
+.gallery-search {
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 14px;
+    padding: 5px 8px;
+}
+
+.clear-filter {
+    border: none;
+    border-radius: 4px;
+    background-color: #e74c3c;
+    color: #fff;
+    cursor: pointer;
+    padding: 5px 8px;
+}
+
+.clear-filter:hover:not(.disabled) {
+    background-color: #c0392b;
+}
+
+.clear-filter.disabled {
+    cursor: not-allowed;
+    opacity: 0.6;
 }

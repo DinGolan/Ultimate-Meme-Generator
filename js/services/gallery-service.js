@@ -2,11 +2,16 @@
 /* Ultimate Meme Generator */
 /***************************/
 
-// Global Variables //
-var gImages = [];
+/*==============================*/
+/*      GLOBAL VARIABLES        */
+/*==============================*/
+var gImages                = [];
+var gFilteredKeywords      = [];
 var gKeywordSearchCountMap = null;
 
-// Function Implementations //
+/*==============================*/
+/*   IMAGE LIST MANAGEMENT      */
+/*==============================*/
 function addImage(folderFiles, folderPath, allImages, idCounterRef) {
     folderFiles.forEach(fileName => {
         const fileUrl = `${folderPath}/${fileName}`;
@@ -28,7 +33,12 @@ function setImage(imageId) {
     gMeme.selectedImageId = imageId;
 }
 
+/*==============================*/
+/*    IMAGE KEYWORDS HANDLING   */
+/*==============================*/
 function getKeywordsForImage(imageId) {
+    let emptyList = [];
+
     switch (imageId) {
         case 1:
             return ['trump', 'politics', 'angry'];
@@ -160,7 +170,7 @@ function getKeywordsForImage(imageId) {
             return ['buzz', 'woody', 'meme'];
 
         default:
-            return [];
+            return emptyList;
     }
 }
 
@@ -175,4 +185,41 @@ function buildKeywordSearchCountMap() {
             }
         });
     }
+}
+
+/*==================*/
+/*    RANDOM TEXT   */
+/*==================*/
+function getRandomText() {
+    const randTexts = [
+        '😎 Life is Good 😎',
+        '🫢 Oops ... 🫢',
+        '🤠 Feeling Awesome ! 🤠',
+        '🫣 Why Not ? 🫣'
+    ];
+
+    const randIdx  = Math.floor(Math.random() * randTexts.length);
+    const randText = randTexts[randIdx];
+
+    return randText;
+}
+
+/*====================*/
+/*   GALLERY FILTER   */
+/*====================*/
+function extractKeywordsFromImages(images) {
+    const keywordsList = [];
+
+    if (Array.isArray(images)) {
+        for (const img of images) {
+            if (Array.isArray(img.keywords)) {
+                for (const keyword of img.keywords) {
+                    const cleanKeyword = String(keyword).trim();
+                    if (cleanKeyword) keywordsList.push(cleanKeyword);
+                }
+            }
+        }
+    }
+
+    return keywordsList;
 }

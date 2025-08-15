@@ -2,10 +2,23 @@
 /* Ultimate Meme Generator */
 /***************************/
 
+.editor-section {
+    box-sizing: border-box;
+    max-width: 800px;
+    width: 100%;
+}
+
+.editor-section h2 {
+    margin-bottom: 5px;
+}
+
 .editor-container {
     background-color: #f9f9f9;
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: column;
+    gap: 10px;
     min-height: 200px;
-    padding: 10px;
 }
 
 .meme-canvas {
@@ -16,4 +29,29 @@
 .meme-text-input,
 .meme-color-input {
     margin: 5px;
+}
+
+.editor-placeholder {
+    padding: 10px;
+}
+
+.stickers-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+    margin: 10px 0;
+}
+
+.btn-sticker {
+    border: 1px solid #ccc;
+    background: #fff;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 20px;
+    padding: 5px 8px;
+    transition: transform 0.2s;
+}
+
+.btn-sticker:hover {
+    transform: scale(1.2);
 }

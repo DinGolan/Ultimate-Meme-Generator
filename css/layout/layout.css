@@ -1,0 +1,16 @@
+/***************************/
+/* Ultimate Meme Generator */
+/***************************/
+
+.main-layout {
+    align-items: stretch;
+    display: grid;
+    grid-template-columns: 3fr 2fr;
+    gap: 20px;
+}
+
+.editor-saved-memes-column {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}

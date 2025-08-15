@@ -6,5 +6,12 @@
 @import url('../base/base.css');
 
 /* Components */
+@import url('../components/storage.css');
 @import url('../components/gallery.css');
 @import url('../components/editor.css');
+
+/* Layout */
+@import url('./layout.css');
+
+/* MQ */
+@import url('./mq.css');

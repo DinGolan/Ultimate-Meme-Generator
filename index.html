@@ -21,24 +21,46 @@
 
     <!-- Main -->
     <main>
+        <div class="main-layout">
 
-        <!-- Gallery -->
-        <section class="gallery-section">
-            <h2>Image Gallery</h2>
-            <div class="gallery-container"></div>
-        </section>
+            <!-- Gallery -->
+            <section class="gallery-section">
+                <h2>Image Gallery</h2>
+                <div class="gallery-filter">
+                    <input list="gallery-keywords" class="gallery-search" placeholder="Filter Images ..."
+                           oninput="onGallerySearch(this.value); onGallerySuggest(this.value); onToggleClearButton(this.value)">
+                    <datalist id="gallery-keywords" class="gallery-keywords"></datalist>
+                    <button class="clear-filter disabled" onclick="onClearGalleryFilter()" disabled>Clear</button>
+                </div>
 
-        <!-- Editor -->
-        <section class="editor-section">
-            <h2>Meme Editor</h2>
-            <div class="editor-container"></div>
-        </section>
+                <button class="btn-flexible" onclick="onRandomMeme()">I'm Flexible</button>
+                <div class="gallery-container"></div>
+            </section>
+
+            <div class="editor-saved-memes-column">
+
+                <!-- Editor -->
+                <section class="editor-section">
+                    <h2>Meme Editor</h2>
+                    <button class="btn-save-meme" onclick="onSaveMeme()">Save Meme</button>
+                    <div class="editor-container"></div>
+                </section>
+
+                <!-- Saved Memes -->
+                <section class="saved-memes-section">
+                    <h2>Saved Memes</h2>
+                    <div class="saved-memes-container"></div>
+                </section>
+            </div>
+        </div>
     </main>
 
     <!-- Script -->
     <script src="js/controllers/main-controller.js"></script>
+    <script src="js/controllers/storage-controller.js"></script>
     <script src="js/controllers/gallery-controller.js"></script>
     <script src="js/controllers/meme-controller.js"></script>
+    <script src="js/services/storage-service.js"></script>
     <script src="js/services/gallery-service.js"></script>
     <script src="js/services/meme-service.js"></script>
 </body>

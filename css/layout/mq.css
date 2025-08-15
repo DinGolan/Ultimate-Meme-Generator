@@ -1,0 +1,79 @@
+/***************************/
+/* Ultimate Meme Generator */
+/***************************/
+
+/* Tablet */
+@media (max-width: 768px) {
+    .main-layout {
+        grid-template-columns: 1fr;
+        gap: 16px;
+    }
+
+    .editor-column {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .gallery-container {
+        grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    }
+
+    .gallery-container img {
+        height: 120px;
+        width: 100%;
+        width: 100%;
+    }
+
+    .editor-section,
+    .saved-memes-section {
+        max-width: 100%;
+    }
+
+    .meme-canvas {
+        height: auto;
+        width: 100%;
+    }
+
+    button {
+        font-size: 12px;
+        padding: 4px 8px;
+    }
+
+    .saved-meme-card img {
+        width: 96px;
+    }
+
+    .saved-meme-delete {
+        font-size: 14px;
+        height: 20px;
+        width: 20px;
+    }
+}
+
+/* Mobile */
+@media (max-width: 480px) {
+    .meme-text-input,
+    .meme-color-input {
+        margin: 5px 0;
+        width: 100%;
+    }
+
+    .gallery-container {
+        grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+    }
+
+    .gallery-container img {
+        height: 100px;
+        width: 100%;
+    }
+
+    .saved-meme-card img {
+        width: 80px;
+    }
+
+    .saved-meme-delete {
+        font-size: 12px;
+        height: 18px;
+        width: 18px;
+    }
+}

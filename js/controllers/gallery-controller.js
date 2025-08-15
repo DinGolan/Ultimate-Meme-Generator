@@ -4,7 +4,9 @@
 
 'use strict';
 
-// Function Implementations //
+/*==============================*/
+/*    IMAGE LIST MANAGEMENT     */
+/*==============================*/
 async function updateImageList() {
     /**
      * [Details] :
@@ -52,20 +54,124 @@ async function updateImageList() {
     buildKeywordSearchCountMap();
 }
 
-function renderGallery() {
+/*==============================*/
+/*     GALLERY RENDERING        */
+/*==============================*/
+function renderGallery(images = gImages) {
     const elGallery = document.querySelector('.gallery-container');
 
-    let strHTML = '';
-    gImages.forEach(image => {
-            strHTML += `<img src="${image.url}"
-                             alt="Meme - ${image.id}"
-                             onclick="onImageSelect(${image.id})">`;
+    let strHTML = DEFAULT_TEXT;
+    images.forEach(image => {
+        strHTML += `
+            <img src="${image.url}"
+                 alt="Meme - ${image.id}"
+                 onclick="onImageSelect(${image.id})">
+        `;
     });
 
     elGallery.innerHTML = strHTML;
 }
 
+/*==============================*/
+/*   IMAGE SELECTION HANDLING   */
+/*==============================*/
 function onImageSelect(imageId) {
     setImage(imageId);
     renderMemeEditor();
+    onResetTextInput();
+}
+
+function onRandomMeme() {
+    if (!gImages.length) return;
+
+    const randIdx   = Math.floor(Math.random() * gImages.length);
+    const randImage = gImages[randIdx];
+
+    const randText = getRandomText();
+
+    gMeme = {
+        selectedImageId: randImage.id,
+        selectedLineIdx: 0,
+        lines : [
+            {
+                text:  randText,
+                size:  DEFAULT_LINE_SIZE,
+                color: DEFAULT_COLOR,
+                x:     DEFAULT_CORD,
+                y:     DEFAULT_CORD,
+                font:  DEFAULT_FONT,
+                align: DEFAULT_ALIGN
+            }
+        ]
+    };
+
+    renderMemeEditor();
+}
+
+/*====================*/
+/*   GALLERY FILTER   */
+/*====================*/
+function onInitGalleryFilter() {
+    const MIN_RANGE = 0;
+    const MAX_RANGE = 5;
+
+    const elDataList   = document.querySelector('.gallery-keywords');
+    const keywordsList = extractKeywordsFromImages(gImages);
+    gFilteredKeywords  = [...new Set(keywordsList)].sort((a, b) => a.localeCompare(b));
+
+    elDataList.innerHTML = gFilteredKeywords
+                           .slice(MIN_RANGE, MAX_RANGE)
+                           .map(keyword => `<option value="${keyword}"></option>`)
+                           .join(DEFAULT_TEXT);
+}
+
+function onGallerySuggest(value) {
+    const MIN_RANGE = 0;
+    const MAX_RANGE = 5;
+
+    const term       = (value || DEFAULT_TEXT).toLowerCase().trim();
+    const elDataList = document.querySelector('.gallery-keywords');
+
+    const matches = term
+                    ? gFilteredKeywords
+                      .filter(keyword => keyword.toLowerCase()
+                      .includes(term))
+                      .slice(MIN_RANGE, MAX_RANGE)
+                    : gFilteredKeywords.slice(MIN_RANGE, MAX_RANGE);
+
+    elDataList.innerHTML = matches
+                           .map(keyword => `<option value="${keyword}"></option>`)
+                           .join(DEFAULT_TEXT);
+}
+
+function onGallerySearch(searchValue) {
+    let emptyList = [];
+    const term    = (searchValue || DEFAULT_TEXT).toLowerCase().trim();
+
+    if (!term) {
+        renderGallery(gImages);
+        return;
+    }
+
+    const filteredImages = gImages.filter(img =>
+        (img.keywords || emptyList).some(keyword => String(keyword)
+                                             .toLowerCase()
+                                             .includes(term))
+    );
+
+    renderGallery(filteredImages);
+}
+
+function onClearGalleryFilter() {
+    const elGallerySearch = document.querySelector('.gallery-search');
+    elGallerySearch.value = DEFAULT_TEXT;
+    onGallerySuggest(DEFAULT_TEXT);
+    renderGallery(gImages);
+}
+
+function onToggleClearButton(value) {
+    const elClear    = document.querySelector('.clear-filter');
+    const isEmpty    = !(value.trim());
+    elClear.disabled = isEmpty;
+    elClear.computedStyleMap.cursor = isEmpty ? 'not-allowed' : 'pointer';
 }
