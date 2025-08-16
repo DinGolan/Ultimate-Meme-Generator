@@ -63,13 +63,30 @@ function renderGallery(images = gImages) {
     let strHTML = DEFAULT_TEXT;
     images.forEach(image => {
         strHTML += `
-            <img src="${image.url}"
-                 alt="Meme - ${image.id}"
-                 onclick="onImageSelect(${image.id})">
+            <div class="gallery-card">
+                <img src="${image.url}"
+                     alt="Meme - ${image.id}"
+                     onclick="onImageSelect(${image.id})">
+                <button class="gallery-delete" title="Delete Image"
+                        onclick="onDeleteGalleryImage(${image.id}, event)">x</button>
+            </div>
         `;
     });
 
     elGallery.innerHTML = strHTML;
+}
+
+function onDeleteGalleryImage(imageId, event) {
+    if (event) event.stopPropagation();
+
+    const imageIdx = gImages.findIndex(img => img.id === imageId);
+    if (imageIdx === -1) return;
+
+    gImages.splice(imageIdx, 1);
+    saveToStorage(GALLERY_STORAGE_KEY, gImages);
+
+    renderGallery(gImages);
+    onInitGalleryFilter();
 }
 
 /*==============================*/

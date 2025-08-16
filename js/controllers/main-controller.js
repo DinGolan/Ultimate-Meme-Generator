@@ -7,6 +7,8 @@
  * (1) - Check the image resolution when I’m in mobile mode,
  *       meaning the canvas isn’t quite proportional when viewed on a mobile device.
  * (2) - Check MQ.css (Desktop Behavior).
+ * (3) - Write all features in a Table.
+ * (4) - Save in Dropbox, GitHub, etc ...
  **/
 
 'use strict';
