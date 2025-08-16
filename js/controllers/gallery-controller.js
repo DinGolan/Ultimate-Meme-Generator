@@ -134,7 +134,7 @@ function onGallerySuggest(value) {
     onToggleClearButton(value);
 }
 
-function onGallerySearch(searchValue) {
+function onGallerySearch(searchValue, skipIncrease = false) {
     let emptyList = [];
     const term    = (searchValue || DEFAULT_TEXT).toLowerCase().trim();
 
@@ -149,6 +149,12 @@ function onGallerySearch(searchValue) {
                                                       .toLowerCase()
                                                       .includes(term))
     );
+
+    const termCount = gKeywordSearchCountMap[term];
+    if (!skipIncrease && termCount !== undefined) {
+        gKeywordSearchCountMap[term]++;
+        renderKeywordCloud();
+    }
 
     onToggleClearButton(searchValue);
     renderGallery(filteredImages);
@@ -215,4 +221,47 @@ function onLoadImageToCanvas(image) {
     context.drawImage(image, 0, 0, elCanvas.width, elCanvas.height);
 
     onDrawMeme();
+}
+
+/*===================*/
+/*   KEYWORD CLOUD   */
+/*===================*/
+function renderKeywordCloud() {
+    const elCloud = document.querySelector('.gallery-keyword-cloud');
+    if (!elCloud || !gKeywordSearchCountMap) return;
+
+    const keywords = Object.keys(gKeywordSearchCountMap)
+                    .sort((a, b) => a.localeCompare(b))
+                    .slice(0, 10);
+
+    elCloud.innerHTML = keywords.map(keyword => {
+        const count         = gKeywordSearchCountMap[keyword];
+        const fontSizeClass = getFontSizeClass(count);
+        return `<span class="keyword ${fontSizeClass}" onclick="onKeywordClick('${keyword}')">${keyword}</span>`;
+    }).join(DEFAULT_TEXT);
+}
+
+function onKeywordClick(keyword) {
+    if (gKeywordSearchCountMap[keyword] !== undefined) {
+        gKeywordSearchCountMap[keyword]++;
+    }
+
+    renderKeywordCloud();
+
+    const elSearchInput = document.querySelector('.gallery-search');
+    if (elSearchInput && elSearchInput.value !== keyword) {
+        elSearchInput.value = keyword;
+    }
+
+    const skipIncrease = true;
+    onGallerySearch(keyword, skipIncrease);
+}
+
+function getFontSizeClass(count) {
+    if (count >= 4) return 'size-xl';
+    if (count >= 3) return 'size-lg';
+    if (count >= 2) return 'size-md';
+    if (count >= 1) return 'size-sm';
+
+    return 'size-xs';
 }

@@ -69,3 +69,43 @@
 .file-upload-from-device {
     display: none;
 }
+
+.gallery-keyword-cloud {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.gallery-keyword-cloud span {
+    cursor: pointer;
+    transition: transform 0.2s, font-size 0.2s;
+    user-select: none;
+}
+
+.gallery-keyword-cloud span:hover {
+    transform: scale(1.1);
+    text-decoration: underline;
+}
+
+.keyword {
+    border-radius: 6px;
+    cursor: pointer;
+    display: inline-block;
+    font-weight: bold;
+    padding: 4px 8px;
+    transition: transform 0.2s, background-color 0.2s;
+    user-select: none;
+}
+
+.keyword:hover {
+    background-color: #ff8c00;
+    color: #fff;
+    transform: scale(1.2);
+}
+
+.size-xs { font-size: 14px; color: #666; }
+.size-sm { font-size: 18px; color: #444; }
+.size-md { font-size: 22px; color: #222; }
+.size-lg { font-size: 26px; color: #111; }
+.size-xl { font-size: 30px; color: #000; }

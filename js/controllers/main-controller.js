@@ -26,6 +26,7 @@ async function onInit() {
 
         renderGallery();
         onInitGalleryFilter();
+        renderKeywordCloud();
         renderEmptyEditor();
         renderSavedMemes();
     } catch (error) {

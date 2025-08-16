@@ -383,6 +383,8 @@ function makeBox(x, y, width, height) {
 }
 
 function isPointInLineBox(x, y, line) {
+    if (!line || !line.box) return false;
+
     return (
         x >= line.box.x                  &&
         x <= line.box.x + line.box.width &&
@@ -510,3 +512,7 @@ function shareCanvasBlob(elCanvas, format, extension) {
         onDownloadMeme(extension, isFallback);
     });
 }
+
+/*=============================*/
+/*     INLINE TEXT EDITING     */
+/*=============================*/

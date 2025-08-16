@@ -8,70 +8,96 @@
 /*      EDITOR RENDERING        */
 /*==============================*/
 function renderMemeEditor() {
-    const stickers   = ['😂', '😍', '🔥', '😎', '🤔', '💯', '👍', '🎉'];
-    let elEditor     = document.querySelector('.editor-container');
+    renderEditorLayout();
 
-    let stickersHTML = '<div class="stickers-container">';
-    stickers.forEach(sticker => {
-        stickersHTML += `<button class="btn-sticker" onclick="onAddSticker('${sticker}')">${sticker}</button>`;
-    });
-    stickersHTML += '</div>';
+    const elMemeCanvas = onInitCanvasElement();
+    if (!elMemeCanvas) return;
 
-    elEditor.innerHTML =
-    `
+    onAttachCanvasEvents(elMemeCanvas);
+
+    onDrawMeme();
+    onUpdateSwitchLineButton();
+}
+
+function renderEditorLayout() {
+    const stickers = ['😂', '😍', '🔥', '😎', '🤔', '💯', '👍', '🎉'];
+    const elEditor = document.querySelector('.editor-container');
+
+    const stickersHTML = onGetStickersHTML(stickers);
+
+    elEditor.innerHTML = `
         <canvas class="meme-canvas" width="400" height="400"></canvas>
-
-        <!-- Add Sticker -->
         ${stickersHTML}
+        ${onGetEditorControlsHTML()}
+    `;
+}
 
+function onGetStickersHTML(stickers) {
+    return `
+        <div class="stickers-container">
+            ${stickers.map(sticker =>
+                `<button class="btn-sticker" onclick="onAddSticker('${sticker}')">${sticker}</button>`
+            ).join('')}
+        </div>
+    `;
+}
+
+function onGetEditorControlsHTML() {
+    return `
         <div>
-            <!-- Text (Input) -->
             <input type="text" class="meme-text-input"
                    placeholder="Enter Meme Text"
                    oninput="onSetText(this.value)">
 
-            <!-- Color -->
             <input type="color" class="meme-color-input"
                    value="#ffffff"
                    onchange="onSetColor(this.value)">
 
-            <!-- Font Family -->
             <select onchange="onSetFontFamily(this.value)">
                 <option value="Impact">Impact</option>
                 <option value="Arial">Arial</option>
                 <option value="Times New Roman">Times New Roman</option>
             </select>
 
-            <!-- Alignment -->
             <select onchange="onSetAlign(this.value)">
                 <option value="left">Left</option>
                 <option value="center" selected>Center</option>
                 <option value="right">Right</option>
             </select>
 
-            <!-- Font Size -->
             <button onclick="onIncreaseFont()">A+</button>
             <button onclick="onDecreaseFont()">A-</button>
 
-            <!-- Position Arrows -->
             <button onclick="onMoveLine('up')">↑</button>
             <button onclick="onMoveLine('down')">↓</button>
 
-            <!-- Add / Delete -->
             <button onclick="onAddLine()">Add Line</button>
             <button onclick="onDeleteLine()">Delete Line</button>
 
-            <!-- Switch Line -->
             <button onclick="onSwitchLine()">Switch Line</button>
 
-            <!-- Download -->
             <button onclick="onDownloadMeme()">Download</button>
         </div>
     `;
+}
 
-    // Event Listener //
+
+function onInitCanvasElement() {
     const elMemeCanvas = document.querySelector('.meme-canvas');
-    elMemeCanvas.addEventListener('click', onCanvasClick);
+
+    if (!elMemeCanvas) {
+        console.error('[Error] Canvas Element Not Found ...');
+        return null;
+    }
+
+    return elMemeCanvas;
+}
+
+function onAttachCanvasEvents(elMemeCanvas) {
+
+    // Click Events //
+    elMemeCanvas.addEventListener('click'   , onCanvasClick);
+    elMemeCanvas.addEventListener('dblclick', onCanvasDoubleClick);
 
     // Mouse Events //
     elMemeCanvas.addEventListener('mousedown' , onCanvasMouseDown);
@@ -83,9 +109,6 @@ function renderMemeEditor() {
     elMemeCanvas.addEventListener('touchstart', onCanvasTouchStart);
     elMemeCanvas.addEventListener('touchmove' , onCanvasTouchMove);
     elMemeCanvas.addEventListener('touchend'  , onCanvasTouchEnd);
-
-    onDrawMeme();
-    onUpdateSwitchLineButton();
 }
 
 function renderEmptyEditor() {
@@ -109,7 +132,7 @@ function onDrawMeme() {
     }
 
     let image = new Image();
-    image.src   = imageData.url;
+    image.src = imageData.url;
 
     image.onload = () => {
         context.clearRect(0, 0, elCanvas.width, elCanvas.height);
@@ -365,7 +388,7 @@ function onAddSticker(sticker) {
 /*=============================*/
 function onCanvasMouseDown(event) {
     const { x, y } = getCanvasCoords(event);
-    startDragging(x, y);
+    onStartDragging(x, y);
 }
 
 function onCanvasMouseMove(event) {
@@ -378,11 +401,11 @@ function onCanvasMouseMove(event) {
     elCanvas.style.cursor = isOverText ? 'pointer' : 'default';
 
     if (!gDragState.isDragging) return;
-    dragTo(x, y);
+    onDragTo(x, y);
 }
 
 function onCanvasMouseUp() {
-    stopDragging();
+    onStopDragging();
 }
 
 /*=============================*/
@@ -390,26 +413,26 @@ function onCanvasMouseUp() {
 /*=============================*/
 function onCanvasTouchStart(event) {
     const { x, y } = getCanvasCoords(event);
-    startDragging(x, y);
+    onStartDragging(x, y);
 }
 
 function onCanvasTouchMove(event) {
     if (!gDragState.isDragging) return;
 
     const { x, y } = getCanvasCoords(event);
-    dragTo(x, y);
+    onDragTo(x, y);
 
     event.preventDefault();
 }
 
 function onCanvasTouchEnd() {
-    stopDragging();
+    onStopDragging();
 }
 
 /*================================*/
 /*     DRAG & DROP - GENERALS     */
 /*================================*/
-function startDragging(x, y) {
+function onStartDragging(x, y) {
     const meme           = getMeme();
     const clickedLineIdx = meme.lines.findIndex(line => isPointInLineBox(x, y, line));
 
@@ -421,7 +444,7 @@ function startDragging(x, y) {
     }
 }
 
-function dragTo(x, y) {
+function onDragTo(x, y) {
     const meme = getMeme();
 
     meme.lines[gDragState.draggedLineIdx].x = x - gDragState.dragOffsetX;
@@ -430,7 +453,7 @@ function dragTo(x, y) {
     onDrawMeme();
 }
 
-function stopDragging() {
+function onStopDragging() {
     gDragState.isDragging     = false;
     gDragState.draggedLineIdx = null;
 }
@@ -508,3 +531,7 @@ function onWebShare() {
 
     shareCanvasBlob(elCanvas, format, extension);
 }
+
+/*=============================*/
+/*     INLINE TEXT EDITING     */
+/*=============================*/
