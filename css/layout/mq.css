@@ -2,21 +2,21 @@
 /* Ultimate Meme Generator */
 /***************************/
 
-/* Desktop */
+/* Desktop (1) */
 @media (max-width: 1608.89px) {
     .btn-facebook {
         margin-top: -5px;
     }
 }
 
-/* Desktop */
+/* Desktop (2) */
 @media (max-width: 1574px) {
     .btn-facebook {
         margin-top: -5px;
     }
 }
 
-/* Desktop */
+/* Desktop (3) */
 @media (max-width: 891px) {
     .btn-share-meme,
     .btn-image-url,
@@ -25,7 +25,7 @@
     }
 }
 
-/* Tablet */
+/* Tablet (1) */
 @media (max-width: 768px) {
     .main-layout {
         grid-template-columns: 1fr;
@@ -70,6 +70,14 @@
         font-size: 14px;
         height: 20px;
         width: 20px;
+    }
+}
+
+/* Tablet (2) */
+@media (max-width: 600px) {
+    header {
+        font-size: 1.5rem;
+        padding: 1rem;
     }
 }
 

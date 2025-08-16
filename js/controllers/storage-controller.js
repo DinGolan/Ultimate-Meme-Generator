@@ -16,7 +16,7 @@ function renderSavedMemes() {
     const elContainer = document.querySelector('.saved-memes-container');
 
     if (!savedMemes.length) {
-        elContainer.innerHTML = '<p>[Info] No Saved Memes Available ...</p>'
+        elContainer.innerHTML = '<p class="info-message"><strong>[Info]</strong> No Saved Memes Available ...</p>'
         return;
     }
 

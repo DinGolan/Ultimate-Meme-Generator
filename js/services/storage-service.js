@@ -16,6 +16,11 @@ function saveMeme() {
     const memes   = loadFromStorage(MEME_STORAGE_KEY) || emptyList;
 
     const elCanvas      = document.querySelector('.meme-canvas');
+    if (!elCanvas) {
+        alert('[Error] Cannot Save Meme - No Image Selected !');
+        return;
+    }
+
     const memeImageData = elCanvas.toDataURL('image/png');
 
     const savedMeme = {

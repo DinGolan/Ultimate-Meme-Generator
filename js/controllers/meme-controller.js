@@ -129,7 +129,7 @@ function onAttachInputCaretListeners() {
 
 function renderEmptyEditor() {
     const elEditor     = document.querySelector('.editor-container');
-    elEditor.innerHTML = `<p class="editor-placeholder">[Info] Editor will be displayed here ...</p>`;
+    elEditor.innerHTML = `<p class="info-message"><strong>[Info]</strong> Editor will be displayed here ...</p>`;
 }
 
 /*==============================*/
@@ -143,7 +143,7 @@ function onDrawMeme() {
 
     const imageData = getImageById(meme.selectedImageId);
     if (!imageData) {
-        console.warn('[Warning] No image found for id :', meme.selectedImageId);
+        console.warn(`[Warning] No image found for id : ${meme.selectedImageId}`);
         return;
     }
 
@@ -231,11 +231,6 @@ function onDrawTextFrame(context, line) {
     const LINE_WIDTH    = 2;
     const DEFAULT_COLOR = '#ffffffb3';
 
-    // [Debug] //
-    /**
-     * console.log(`[Info] Selected Line Object : ${JSON.stringify(line, null, 2)}`);
-     **/
-
     // [1] - Calculate initial rectangle position and size based on text metrics //
     let rectX      = line.box.x - Math.floor(DEFAULT_PADDING / 2);
     let rectY      = line.box.y;
@@ -297,7 +292,7 @@ function onDownloadMeme(format = DEFAULT_FORMAT, isFallback = false) {
     format = format.toLowerCase();
 
     if (!allowedFormat.includes(format)) {
-        alert('[Warning] Only [png, jpg, jpeg] formats are allowed ...');
+        alert('[Error] Only [png, jpg, jpeg] formats are allowed ...');
         return;
     }
 
@@ -502,7 +497,7 @@ function onUploadMeme(event) {
 
     const elCanvas = document.querySelector('.meme-canvas');
     if (!elCanvas) {
-        alert('[Warning] No Meme Canvas Found to Upload ...');
+        alert('[Error] No Meme Canvas Found to Upload ...');
         return;
     }
 

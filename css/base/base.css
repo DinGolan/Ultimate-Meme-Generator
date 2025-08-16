@@ -13,10 +13,22 @@ body {
 }
 
 header {
-    background-color: #ff8c00;
-    color: white;
-    padding: 1rem;
+    background: linear-gradient(135deg, #ff8c00, #ff6a00);
+    border-bottom-left-radius: 12px;
+    border-bottom-right-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+    color: #fff;
+    font-family: 'Poppins', sans-serif;
+    font-size: 2rem;
+    font-weight: 600;
+    letter-spacing: 1px;
+    padding: 1.5rem;
     text-align: center;
+}
+
+header h1 {
+    font-size: 2.2rem;
+    margin: 0;
 }
 
 main {
@@ -28,6 +40,28 @@ main {
 section {
     border: 1px solid #ccc;
     padding: 1rem;
+}
+
+section h2 {
+    color: #333;
+    display: inline-block;
+    font-family: 'Poppins', sans-serif;
+    font-size: 1.4rem;
+    font-weight: 600;
+    margin: 0 0 1rem 0;
+    position: relative;
+    padding-bottom: 6px;
+}
+
+section h2::after {
+    bottom: -4px;
+    border-radius: 2px;
+    background: linear-gradient(90deg, #ff8c00, #ff6a00);
+    content: "";
+    height: 3px;
+    left: 0;
+    position: absolute;
+    width: 40px;
 }
 
 button {
@@ -74,12 +108,18 @@ button[disabled]:hover {
     margin: 15px 0;
 }
 
-.btn-blue {
-    background-color: #4a90e2;
+.btn-orange {
+    background-color: #ff8c00;
 }
 
-.btn-blue:hover {
-    background-color: #357ab8;
+.btn-orange:hover {
+    background-color: #e67600;;
+    transform: translateY(-2px);
+}
+
+.btn-orange:active {
+    background-color: #cc6600;
+    transform: translateY(0);
 }
 
 .btn-lg-padding {
@@ -88,4 +128,22 @@ button[disabled]:hover {
 
 .btn-md-padding {
     padding: 8px 16px;
+}
+
+.info-message {
+    background: #f9f9f9;
+    border: 1px dashed #ff8c00;
+    border-radius: 8px;
+    color: #555;
+    display: inline-block;
+    font-family: 'Poppins', sans-serif;
+    font-size: 14px;
+    margin: 10px 0;
+    padding: 10px 14px;
+}
+
+.info-message strong {
+    color: #ff8c00;
+    font-weight: 600;
+    margin-right: 4px;
 }

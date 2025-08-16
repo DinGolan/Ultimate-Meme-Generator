@@ -41,13 +41,14 @@ function initMeme(selectedImageId, text = DEFAULT_TEXT) {
         selectedLineIdx: 0,
         lines : [
             {
-                text:  text,
-                size:  DEFAULT_LINE_SIZE,
-                color: DEFAULT_COLOR,
-                x:     DEFAULT_CORD,
-                y:     DEFAULT_CORD,
-                font:  DEFAULT_FONT,
-                align: DEFAULT_ALIGN
+                text:       text,
+                size:       DEFAULT_LINE_SIZE,
+                color:      DEFAULT_COLOR,
+                x:          DEFAULT_CORD,
+                y:          DEFAULT_CORD,
+                font:       DEFAULT_FONT,
+                align:      DEFAULT_ALIGN,
+                caretIndex: DEFAULT_CARET_IDX,
             }
         ]
     };

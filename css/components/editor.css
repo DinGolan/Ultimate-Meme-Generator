@@ -9,7 +9,11 @@
 }
 
 .editor-section h2 {
-    margin-bottom: 0;
+    margin-bottom: 7px;
+}
+
+.editor-section h2::after {
+    bottom: -6px;
 }
 
 .editor-container {
@@ -19,6 +23,14 @@
     flex-direction: column;
     gap: 10px;
     min-height: 200px;
+}
+
+.editor-container .info-message {
+    align-self: flex-start;
+    display: inline-block;
+    margin-left: 15px;
+    margin-top: 15px;
+    max-width: 100%;
 }
 
 .meme-canvas {
@@ -32,10 +44,6 @@
     gap: 5px;
     margin-bottom: 5px;
     margin-left: -7px;
-}
-
-.editor-placeholder {
-    padding: 10px;
 }
 
 .meme-text-input,

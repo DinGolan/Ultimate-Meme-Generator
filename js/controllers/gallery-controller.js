@@ -46,7 +46,7 @@ async function updateImageList() {
         });
 
     } catch(error) {
-        console.error('[Error] An error occurred while updating the image list :', error);
+        console.error(`[Error] An error occurred while updating the image list : ${error}`);
     }
 
     gImages = allImages;
@@ -82,7 +82,7 @@ function onImageSelect(imageId) {
     renderMemeEditor();
 }
 
-function onRandomMeme() {
+function onRandomImage() {
     if (!gImages.length) return;
 
     const randIdx   = Math.floor(Math.random() * gImages.length);
@@ -94,6 +94,7 @@ function onRandomMeme() {
 
     onRemoveSharedButtons();
     renderMemeEditor();
+    onUpdateEditorInputs();
 }
 
 /*====================*/

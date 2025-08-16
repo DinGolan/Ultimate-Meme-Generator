@@ -240,7 +240,7 @@ function isValidFile(file) {
 
 function handleImageLoad(image, fileName) {
     if (isDuplicateImage(fileName)) {
-        alert('[Warning] This Image Already Exist In Gallery ...');
+        alert('[Error] This Image Already Exist In Gallery ...');
         return;
     }
 
