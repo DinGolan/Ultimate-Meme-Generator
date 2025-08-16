@@ -16,7 +16,7 @@ function renderMemeEditor() {
     onAttachCanvasEvents(elMemeCanvas);
 
     onDrawMeme();
-    onUpdateSwitchLineButton();
+    onUpdateLineButtonsState();
 
     // Sync Caret Index From Input to Canvas //
     onAttachInputCaretListeners();
@@ -47,39 +47,42 @@ function onGetStickersHTML(stickers) {
 
 function onGetEditorControlsHTML() {
     return `
-        <div>
-            <input type="text" class="meme-text-input"
-                   placeholder="Enter Meme Text"
-                   oninput="onSetText(this.value)">
+        <div class="meme-toolbar">
+            <div class="meme-toolbar-row">
+                <input type="text" class="meme-text-input"
+                       placeholder="Enter Meme Text"
+                       oninput="onSetText(this.value)">
 
-            <input type="color" class="meme-color-input"
-                   value="#ffffff"
-                   onchange="onSetColor(this.value)">
+                <select class="meme-select meme-font-select" onchange="onSetFontFamily(this.value)">
+                    <option value="Impact">Impact</option>
+                    <option value="Arial">Arial</option>
+                    <option value="Times New Roman">Times New Roman</option>
+                </select>
 
-            <select onchange="onSetFontFamily(this.value)">
-                <option value="Impact">Impact</option>
-                <option value="Arial">Arial</option>
-                <option value="Times New Roman">Times New Roman</option>
-            </select>
+                <select class="meme-select meme-align-select" onchange="onSetAlign(this.value)">
+                    <option value="left">Left</option>
+                    <option value="center" selected>Center</option>
+                    <option value="right">Right</option>
+                </select>
 
-            <select onchange="onSetAlign(this.value)">
-                <option value="left">Left</option>
-                <option value="center" selected>Center</option>
-                <option value="right">Right</option>
-            </select>
+                <input type="color" class="meme-color-input"
+                       value="#ffffff"
+                       onchange="onSetColor(this.value)">
+            </div>
 
-            <button onclick="onIncreaseFont()">A+</button>
-            <button onclick="onDecreaseFont()">A-</button>
+            <div class="meme-toolbar-row">
+                <button class="btn btn-text" onclick="onIncreaseFont()">A+</button>
+                <button class="btn btn-text" onclick="onDecreaseFont()">A-</button>
 
-            <button onclick="onMoveLine('up')">↑</button>
-            <button onclick="onMoveLine('down')">↓</button>
+                <button class="btn btn-move" onclick="onMoveLine('up')">↑</button>
+                <button class="btn btn-move" onclick="onMoveLine('down')">↓</button>
 
-            <button onclick="onAddLine()">Add Line</button>
-            <button onclick="onDeleteLine()">Delete Line</button>
+                <button class="btn btn-text" onclick="onAddLine()">Add Line</button>
+                <button class="btn btn-text" onclick="onDeleteLine()">Delete Line</button>
+                <button class="btn btn-text" onclick="onSwitchLine()">Switch Line</button>
 
-            <button onclick="onSwitchLine()">Switch Line</button>
-
-            <button onclick="onDownloadMeme()">Download</button>
+                <button class="btn btn-download" onclick="onDownloadMeme()">Download</button>
+            </div>
         </div>
     `;
 }
@@ -259,6 +262,7 @@ function onDrawTextFrame(context, line) {
 function onSetText(newText) {
     setLineText(newText);
     onDrawMeme();
+    onUpdateLineButtonsState();
 
     if (!newText || newText.trim() === '') {
         deactivateCaret();
@@ -282,6 +286,23 @@ function onDecreaseFont() {
     const FONT_SIZE = 2;
     changeFontSize(-1 * FONT_SIZE);
     onDrawMeme();
+}
+
+function onUpdateLineButtonsState() {
+    const hasRealLine   = gMeme.lines.some(line => line.text && line.text.trim() !== '');
+    const enoughRealTxt = gMeme.lines.filter(line => line.text && line.text.trim() !== '' && line.text.length > 1).length > 1;
+
+    const elAllButtons = document.querySelectorAll(`button[onclick="onIncreaseFont()"],
+                                                    button[onclick="onDecreaseFont()"],
+                                                    button[onclick="onMoveLine('up')"],
+                                                    button[onclick="onMoveLine('down')"],
+                                                    button[onclick="onAddLine()"],
+                                                    button[onclick="onDeleteLine()"],
+                                                    button[onclick="onDownloadMeme()"]`);
+    elAllButtons.forEach(btn => btn.disabled = !hasRealLine);
+
+    const elSwitch = document.querySelector('button[onclick="onSwitchLine()"]');
+    if (elSwitch) elSwitch.disabled = !enoughRealTxt;
 }
 
 /*==============================*/
@@ -317,7 +338,7 @@ function onAddLine() {
     addLine();
     onUpdateEditorInputs();
     onDrawMeme();
-    onUpdateSwitchLineButton();
+    onUpdateLineButtonsState();
 }
 
 function onSwitchLine() {
@@ -326,13 +347,7 @@ function onSwitchLine() {
     switchLine();
     onUpdateEditorInputs();
     onDrawMeme();
-    onUpdateSwitchLineButton();
-}
-
-function onUpdateSwitchLineButton() {
-    const elBtn = document.querySelector('button[onclick="onSwitchLine()"]');
-    if (!elBtn) return;
-    elBtn.disabled = (gMeme.lines.length <= 1);
+    onUpdateLineButtonsState();
 }
 
 function onCanvasClick(event) {
@@ -401,17 +416,18 @@ function onMoveLine(direction) {
 function onDeleteLine() {
     deleteLine();
     onDrawMeme();
-    onUpdateSwitchLineButton();
+    onUpdateLineButtonsState();
 }
 
 function onAddSticker(sticker) {
     addLine(sticker);
 
     const elMemeTextInput = document.querySelector('.meme-text-input');
-    if (elMemeTextInput) elMemeTextInput.value = DEFAULT_TEXT;
+    if (elMemeTextInput) elMemeTextInput.value = sticker;
 
+    deactivateCaret();
     onDrawMeme();
-    onUpdateSwitchLineButton();
+    onUpdateLineButtonsState();
 }
 
 /*=============================*/
@@ -513,8 +529,8 @@ function onUploadMeme(event) {
 
         if (!isButtonExists) {
             elEditorButtons.insertAdjacentHTML('beforeend', `
-                <a href="${uploadedImageUrl}" class="btn btn-inline btn-lg-padding btn-image-url" target="_blank">Image URL</a>
-                <button class="btn btn-inline btn-lg-padding btn-facebook"
+                <a href="${uploadedImageUrl}" class="btn btn-orange btn-lg-padding btn-inline btn-image-url" target="_blank">Image URL</a>
+                <button class="btn btn-lg-padding btn-inline btn-facebook"
                         onclick="onUploadToFacebook('${encodedUploadedImageUrl}')">
                     Share on Facebook
                 </button>

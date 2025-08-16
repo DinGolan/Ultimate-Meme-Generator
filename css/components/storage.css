@@ -18,6 +18,10 @@
     flex-wrap: wrap;
 }
 
+.saved-memes-container .info-message {
+    margin-top: 15px;
+}
+
 .saved-memes-container img {
     border: 2px solid black;
     cursor: pointer;

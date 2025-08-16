@@ -89,9 +89,12 @@ button[disabled]:hover {
 .btn {
     border: none;
     border-radius: 20px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
     color: white;
     cursor: pointer;
     font-size: 14px;
+    font-family: 'Poppins', sans-serif;
+    font-weight: 500;
     transition: background-color 0.2s ease;
     text-decoration: none;
 }
@@ -113,12 +116,14 @@ button[disabled]:hover {
 }
 
 .btn-orange:hover {
-    background-color: #e67600;;
+    background-color: #e67600;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.15);
     transform: translateY(-2px);
 }
 
 .btn-orange:active {
     background-color: #cc6600;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
     transform: translateY(0);
 }
 
