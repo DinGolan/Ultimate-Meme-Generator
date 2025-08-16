@@ -29,7 +29,7 @@ function renderEditorLayout() {
     const stickersHTML = onGetStickersHTML(stickers);
 
     elEditor.innerHTML = `
-        <canvas class="meme-canvas" width="400" height="400"></canvas>
+        <canvas class="meme-canvas"></canvas>
         ${stickersHTML}
         ${onGetEditorControlsHTML()}
     `;
@@ -51,15 +51,16 @@ function onGetEditorControlsHTML() {
             <div class="meme-toolbar-row">
                 <input type="text" class="meme-text-input"
                        placeholder="Enter Meme Text"
-                       oninput="onSetText(this.value)">
+                       oninput="onSetText(this.value)"
+                       title="Enter Meme Text Here">
 
-                <select class="meme-select meme-font-select" onchange="onSetFontFamily(this.value)">
+                <select class="meme-select meme-font-select" onchange="onSetFontFamily(this.value)" title="Choose Font Family">
                     <option value="Impact">Impact</option>
                     <option value="Arial">Arial</option>
                     <option value="Times New Roman">Times New Roman</option>
                 </select>
 
-                <select class="meme-select meme-align-select" onchange="onSetAlign(this.value)">
+                <select class="meme-select meme-align-select" onchange="onSetAlign(this.value)" title="Choose Text Alignment">
                     <option value="left">Left</option>
                     <option value="center" selected>Center</option>
                     <option value="right">Right</option>
@@ -67,21 +68,22 @@ function onGetEditorControlsHTML() {
 
                 <input type="color" class="meme-color-input"
                        value="#ffffff"
-                       onchange="onSetColor(this.value)">
+                       onchange="onSetColor(this.value)"
+                       title="Pick Text Color">
             </div>
 
             <div class="meme-toolbar-row">
-                <button class="btn btn-text" onclick="onIncreaseFont()">A+</button>
-                <button class="btn btn-text" onclick="onDecreaseFont()">A-</button>
+                <button class="btn btn-text" onclick="onIncreaseFont()" title="Increase Font Size">A +</button>
+                <button class="btn btn-text" onclick="onDecreaseFont()" title="Decrease Font Size">A -</button>
 
-                <button class="btn btn-move" onclick="onMoveLine('up')">↑</button>
-                <button class="btn btn-move" onclick="onMoveLine('down')">↓</button>
+                <button class="btn btn-move" onclick="onMoveLine('up')" title="Move Text Up">↑</button>
+                <button class="btn btn-move" onclick="onMoveLine('down')" title="Move Text Down">↓</button>
 
-                <button class="btn btn-text" onclick="onAddLine()">Add Line</button>
-                <button class="btn btn-text" onclick="onDeleteLine()">Delete Line</button>
-                <button class="btn btn-text" onclick="onSwitchLine()">Switch Line</button>
+                <button class="btn btn-text" onclick="onAddLine()" title="Add New Text Line">Add Line</button>
+                <button class="btn btn-text" onclick="onDeleteLine()" title="Delete Selected Line">Delete Line</button>
+                <button class="btn btn-text" onclick="onSwitchLine()" title="Switch Between Lines">Switch Line</button>
 
-                <button class="btn btn-download" onclick="onDownloadMeme()">Download</button>
+                <button class="btn btn-download" onclick="onDownloadMeme()" title="Download meme">Download</button>
             </div>
         </div>
     `;
@@ -94,6 +96,9 @@ function onInitCanvasElement() {
         console.error('[Error] Canvas Element Not Found ...');
         return null;
     }
+
+    elMemeCanvas.width  = elMemeCanvas.offsetWidth;
+    elMemeCanvas.height = elMemeCanvas.offsetHeight;
 
     return elMemeCanvas;
 }

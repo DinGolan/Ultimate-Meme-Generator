@@ -2,16 +2,46 @@
 /* Ultimate Meme Generator */
 /***************************/
 
-/**
- * [TODO]:
- * (1) - Check the image resolution when I’m in mobile mode,
- *       meaning the canvas isn’t quite proportional when viewed on a mobile device.
- * (2) - Check MQ.css (Desktop Behavior).
- * (3) - Write all features in a Table.
- * (4) - Save in Dropbox, GitHub, etc ...
- **/
-
 'use strict';
+
+/*================================================*/
+/* Meme Generator - Features Implementation Table */
+/*================================================*/
+/*
++------------------------------------------------------+-------------+
+| Feature                                              | Status      |
++------------------------------------------------------+-------------+
+| Add a download link                                  | Done        |
+| Add a color picker button                            | Done        |
+| Add increase / decrease font buttons                 | Done        |
+| Add (to gMeme) a second line                         | Done        |
+| Render the lines on the canvas                       | Done        |
+| Add the button 'add line'                            | Done        |
+| Add the button 'switch line'                         | Done        |
+| Draw a frame around the selected line                | Done        |
+| When drawing text, save location & size for clicks   | Done        |
+| When a line is clicked - select it & sync editor     | Done        |
+| Build the page layout                                | Done        |
+| Make it look good on mobile (gallery + editor)       | Done        |
+| Controls : font family, font size, alignment         | Done        |
+| Up / down arrows for positioning text line           | Done        |
+| Add a Delete-Line button                             | Done        |
+| Add "I'm flexible" button - random meme generator    | Done        |
+| Save created memes (localStorage) + Saved Memes view | Done        |
+| Image gallery filter (with <datalist>)               | Done        |
+| Add stickers (emoji characters)                      | Done        |
+| Support Drag & Drop of lines/stickers on canvas      | Done        |
+| Share on Facebook                                    | Done        |
+| Pick image from user device (instead of gallery)     | Done        |
+| Search by keywords in Image-Gallery                  | Done        |
+| Inline (on Canvas) text editing                      | Done        |
+| Resize / Rotate a line                               | Not Done    |
+| Support various aspect-ratios of images              | Not Done    |
+| Add website theme variations (celeb, kid, etc.)      | Not Done    |
+| Use Web Share API to share meme                      | In Progress |
+| Add i18n & translation (e.g. Hebrew)                 | Not Done    |
++------------------------------------------------------+-------------+
+*/
 
 /*==============================*/
 /*      APPLICATION INIT        */

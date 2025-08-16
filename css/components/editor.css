@@ -17,20 +17,21 @@
 }
 
 .editor-container {
+    align-items: center;
     background-color: #f9f9f9;
     display: flex;
     flex-wrap: wrap;
     flex-direction: column;
     gap: 10px;
+    justify-content: center;
     min-height: 200px;
 }
 
 .editor-container .info-message {
     align-self: flex-start;
-    display: inline-block;
     margin-left: 15px;
     margin-top: 15px;
-    max-width: 100%;
+    margin-bottom: auto;
 }
 
 .editor-buttons {
@@ -41,9 +42,21 @@
     margin-left: -7px;
 }
 
+.editor-buttons .btn {
+  flex: 0 0 auto;
+}
+
 .meme-canvas {
+    aspect-ratio: 1 / 1;
+    border: 3px solid #000;
+    border-radius: 4px;
     display: block;
+    height: auto;
+    max-height: 80vh;
+    max-width: 600px;
+    margin-top: 15px;
     margin-bottom: 10px;
+    width: 100%;
 }
 
 .meme-text-input {
@@ -113,8 +126,7 @@
     display: flex;
     flex-wrap: wrap;
     gap: 15px;
-    margin-top: 10px;
-    margin-bottom: 10px;
+    margin: 10px;
 }
 
 .meme-toolbar-row {
@@ -122,6 +134,8 @@
     display: flex;
     flex-wrap: nowrap;
     gap: 10px;
+    justify-content: center;
+    width: 100%;
 }
 
 .meme-toolbar-row select {

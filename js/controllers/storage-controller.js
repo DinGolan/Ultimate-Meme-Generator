@@ -7,7 +7,6 @@
 /*==============================*/
 function onSaveMeme() {
     saveMeme();
-    onRemoveSharedButtons();
     renderSavedMemes();
 }
 
@@ -15,7 +14,8 @@ function renderSavedMemes() {
     const savedMemes  = getSavedMemes();
     const elContainer = document.querySelector('.saved-memes-container');
 
-    if (!savedMemes.length) {
+    if (!savedMemes || !savedMemes.length) {
+        onRemoveSharedButtons();
         elContainer.innerHTML = '<p class="info-message"><strong>[Info]</strong> No Saved Memes Available ...</p>'
         return;
     }
