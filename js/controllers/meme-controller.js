@@ -97,7 +97,6 @@ function onAttachCanvasEvents(elMemeCanvas) {
 
     // Click Events //
     elMemeCanvas.addEventListener('click'   , onCanvasClick);
-    elMemeCanvas.addEventListener('dblclick', onCanvasDoubleClick);
 
     // Mouse Events //
     elMemeCanvas.addEventListener('mousedown' , onCanvasMouseDown);
