@@ -17,6 +17,9 @@ function renderMemeEditor() {
 
     onDrawMeme();
     onUpdateSwitchLineButton();
+
+    // Sync Caret Index From Input to Canvas //
+    onAttachInputCaretListeners();
 }
 
 function renderEditorLayout() {
@@ -81,7 +84,6 @@ function onGetEditorControlsHTML() {
     `;
 }
 
-
 function onInitCanvasElement() {
     const elMemeCanvas = document.querySelector('.meme-canvas');
 
@@ -97,6 +99,7 @@ function onAttachCanvasEvents(elMemeCanvas) {
 
     // Click Events //
     elMemeCanvas.addEventListener('click'   , onCanvasClick);
+    elMemeCanvas.addEventListener('dblclick', onCanvasDoubleClick);
 
     // Mouse Events //
     elMemeCanvas.addEventListener('mousedown' , onCanvasMouseDown);
@@ -108,6 +111,20 @@ function onAttachCanvasEvents(elMemeCanvas) {
     elMemeCanvas.addEventListener('touchstart', onCanvasTouchStart);
     elMemeCanvas.addEventListener('touchmove' , onCanvasTouchMove);
     elMemeCanvas.addEventListener('touchend'  , onCanvasTouchEnd);
+}
+
+function onAttachInputCaretListeners() {
+    const elInput = document.querySelector('.meme-text-input');
+    if (!elInput) return;
+
+    function handleCaretSync() {
+        syncCaretIndexFromInput();
+        onDrawMeme();
+    }
+
+    elInput.addEventListener('input', handleCaretSync);
+    elInput.addEventListener('click', handleCaretSync);
+    elInput.addEventListener('keyup', handleCaretSync);
 }
 
 function renderEmptyEditor() {
@@ -142,6 +159,9 @@ function onDrawMeme() {
 
             if (idx === meme.selectedLineIdx) {
                 onDrawTextFrame(context, line);
+                if (gCaretVisible && line.text && line.text.trim() !== '') {
+                    onDrawCaret(context, line);
+                }
             }
         });
     };
@@ -244,6 +264,12 @@ function onDrawTextFrame(context, line) {
 function onSetText(newText) {
     setLineText(newText);
     onDrawMeme();
+
+    if (!newText || newText.trim() === '') {
+        deactivateCaret();
+    } else {
+        activateCaret();
+    }
 }
 
 function onSetColor(color) {
@@ -324,6 +350,9 @@ function onCanvasClick(event) {
         gMeme.selectedLineIdx = clickedLineIdx;
         onUpdateEditorInputs();
         onDrawMeme();
+    } else {
+        deactivateCaret();
+        onDrawMeme();
     }
 }
 
@@ -339,6 +368,9 @@ function onUpdateEditorInputs() {
     if (elMemeColorInput) elMemeColorInput.value = selectedLine.color || DEFAULT_COLOR;
     if (elFontSelect)     elFontSelect.value     = selectedLine.font  || DEFAULT_FONT;
     if (elAlignSelect)    elAlignSelect.value    = selectedLine.align || DEFAULT_ALIGN;
+    if (elMemeTextInput && selectedLine.caretIndex !== undefined) {
+        elMemeTextInput.setSelectionRange(selectedLine.caretIndex, selectedLine.caretIndex);
+    }
 }
 
 function onResetTextInput(value = DEFAULT_TEXT) {
@@ -347,6 +379,11 @@ function onResetTextInput(value = DEFAULT_TEXT) {
 
     elInput.value = value;
     try { elInput.setSelectionRange(0, 0); } catch(_) {}
+
+    elInput.setSelectionRange(0, 0);
+
+    const line = gMeme.lines[gMeme.selectedLineIdx];
+    if (line) line.caretIndex = DEFAULT_CARET_IDX;
 
     elInput.focus();
 }
@@ -534,3 +571,68 @@ function onWebShare() {
 /*=============================*/
 /*     INLINE TEXT EDITING     */
 /*=============================*/
+function onCanvasDoubleClick(event) {
+    if (!gMeme || !Array.isArray(gMeme.lines) || gMeme.lines.length === 0) return;
+
+    const { x, y } = getCanvasCoords(event);
+    let lineIdx    = getLineIndexAtCoords(x, y);
+
+    if (lineIdx === -1) return;
+
+    gMeme.selectedLineIdx = lineIdx;
+    onUpdateEditorInputs();
+    onDrawMeme();
+    activateCaret();
+
+    const elInput = document.querySelector('.meme-text-input');
+    if (elInput) {
+        elInput.focus();
+
+        const caretIndex = gMeme.lines[lineIdx].caretIndex ?? elInput.value.length;
+        elInput.setSelectionRange(caretIndex, caretIndex);
+    }
+}
+
+function onDrawCaret(context, line) {
+    if (!line.text || line.text.trim() === '') return;
+
+    const caretIndex = (line.caretIndex !== undefined && line.caretIndex !== null)
+                      ? line.caretIndex
+                      : line.text.length;
+
+    const beforeText = line.text.slice(0, caretIndex);
+    const textWidth  = context.measureText(beforeText).width;
+
+    let caretX = undefined;
+    switch (line.align) {
+        case 'left':
+            caretX = line.x + textWidth;
+            break;
+
+        case 'right':
+            caretX = line.x - textWidth;
+            break;
+
+        case 'center':
+        default:
+            caretX = line.x - (context.measureText(line.text).width / 2) + textWidth;
+            break;
+    }
+
+    const caretYTop    = line.y - line.size;
+    const caretYBottom = line.y;
+
+    context.beginPath();
+    context.moveTo(caretX, caretYTop);
+    context.lineTo(caretX, caretYBottom);
+    context.strokeStyle = line.color || 'black';
+    context.stroke();
+}
+
+function syncCaretIndexFromInput() {
+    const elInput = document.querySelector('.meme-text-input');
+    if (!elInput) return;
+
+    const line      = gMeme.lines[gMeme.selectedLineIdx];
+    line.caretIndex = elInput.selectionStart;
+}

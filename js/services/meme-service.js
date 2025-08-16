@@ -13,14 +13,17 @@ const DEFAULT_CORD      = 200;
 const DEFAULT_COLOR     = '#ffffff';
 const DEFAULT_FONT      = 'Impact';
 const DEFAULT_ALIGN     = 'center';
+const DEFAULT_CARET_IDX = 0;
 const DEFAULT_PADDING   = 10;
 const DEFAULT_FORMAT    = 'jpeg';
 
 /*==============================*/
 /*      GLOBAL STATE OBJECT     */
 /*==============================*/
-var gMeme      = null;
-var gDragState = null;
+var gMeme          = null;
+var gDragState     = null;
+var gCaretVisible  = true;
+var gCaretInterval = null;
 
 initMeme(null);
 initDragState();
@@ -53,6 +56,12 @@ function initMeme(selectedImageId, text = DEFAULT_TEXT) {
 function setLineText(newText) {
     const selectedLine = gMeme.lines[gMeme.selectedLineIdx];
     selectedLine.text  = newText;
+
+    if (selectedLine.caretIndex === undefined) {
+        selectedLine.caretIndex = newText.length;
+    } else {
+        selectedLine.caretIndex = Math.min(selectedLine.caretIndex, newText.length);
+    }
 }
 
 function setLineColor(color) {
@@ -141,13 +150,14 @@ function createLineObject(text, x, y, alignment) {
 
     return {
         text,
-        size: DEFAULT_FONT_SIZE,
+        size:  DEFAULT_FONT_SIZE,
         color: DEFAULT_COLOR,
         x,
         y,
-        align: alignment,
-        font: DEFAULT_FONT,
-        align: alignment
+        align:      alignment,
+        font:       DEFAULT_FONT,
+        align:      alignment,
+        caretIndex: text.length
     };
 }
 
@@ -306,14 +316,17 @@ function deleteLine() {
 
     if (gMeme.lines.length === 0) {
         gMeme.lines.push({
-            text:  DEFAULT_TEXT,
-            size:  DEFAULT_LINE_SIZE,
-            color: DEFAULT_COLOR,
-            x:     DEFAULT_CORD,
-            y:     DEFAULT_CORD,
-            font:  DEFAULT_FONT,
-            align: DEFAULT_ALIGN
+            text:       DEFAULT_TEXT,
+            size:       DEFAULT_LINE_SIZE,
+            color:      DEFAULT_COLOR,
+            x:          DEFAULT_CORD,
+            y:          DEFAULT_CORD,
+            font:       DEFAULT_FONT,
+            align:      DEFAULT_ALIGN,
+            caretIndex: DEFAULT_CARET_IDX
         });
+
+        deactivateCaret();
     }
 
     gMeme.selectedLineIdx = Math.max(0, gMeme.selectedLineIdx - 1);
@@ -516,3 +529,27 @@ function shareCanvasBlob(elCanvas, format, extension) {
 /*=============================*/
 /*     INLINE TEXT EDITING     */
 /*=============================*/
+function getLineIndexAtCoords(x, y) {
+    return gMeme.lines.findIndex(line => line && line.box && isPointInLineBox(x, y, line));
+}
+
+function activateCaret() {
+    const milliSeconds = 500;
+
+    if (gCaretInterval) return;
+
+    gCaretVisible = true;
+    gCaretInterval = setInterval(() => {
+        gCaretVisible = !gCaretVisible;
+        onDrawMeme();
+    }, milliSeconds);
+}
+
+function deactivateCaret() {
+    if (gCaretInterval) {
+        clearInterval(gCaretInterval);
+        gCaretInterval = null;
+    }
+
+    gCaretVisible = false;
+}
