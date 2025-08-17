@@ -47,6 +47,7 @@ Users Can :
 
 ## ▶ Live Demo ▶
 You can view the live app via **GitHub Pages** (after deployment).
+
 Example :
 - https://dingolan.github.io/Ultimate-Meme-Generator/
 
