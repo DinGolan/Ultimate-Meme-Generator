@@ -109,6 +109,7 @@ function onRandomImage() {
     initMeme(randImage.id, randText);
     initDragState();
 
+    deactivateCaret();
     onRemoveSharedButtons();
     renderMemeEditor();
     onUpdateEditorInputs();
