@@ -231,8 +231,7 @@ function onLoadImageToCanvas(image) {
         return;
     }
 
-    const context  = elCanvas.getContext('2d');
-
+    const context   = elCanvas.getContext('2d');
     elCanvas.width  = image.width;
     elCanvas.height = image.height;
 

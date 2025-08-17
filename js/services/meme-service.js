@@ -200,7 +200,7 @@ function wrapText(context, text, maxWidth) {
     const maxLines   = Math.floor(context.canvas.height / lineHeight);
 
     for (let i = 0; i < words.length; i++) {
-        const testLine = buildTestLine(line, words[i]);
+        const testLine  = buildTestLine(line, words[i]);
         const testWidth = context.measureText(testLine).width;
 
         if (testWidth <= maxWidth) {
@@ -444,7 +444,7 @@ function getCanvasCoords(event) {
 async function uploadImage(imageDataUrl, onSuccess) {
     const CLOUD_NAME  = 'webify';
     const PRESET_NAME = 'webify';
-    const UPLOAD_URL = `https://api.cloudinary.com/v1_1/${CLOUD_NAME}/image/upload`;
+    const UPLOAD_URL  = `https://api.cloudinary.com/v1_1/${CLOUD_NAME}/image/upload`;
 
     const formData = new FormData();
     formData.append('file', imageDataUrl);
@@ -539,7 +539,7 @@ function activateCaret() {
 
     if (gCaretInterval) return;
 
-    gCaretVisible = true;
+    gCaretVisible  = true;
     gCaretInterval = setInterval(() => {
         gCaretVisible = !gCaretVisible;
         onDrawMeme();

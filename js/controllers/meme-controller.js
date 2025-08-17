@@ -27,7 +27,6 @@ function renderEditorLayout() {
     const elEditor = document.querySelector('.editor-container');
 
     const stickersHTML = onGetStickersHTML(stickers);
-
     elEditor.innerHTML = `
         <canvas class="meme-canvas"></canvas>
         ${stickersHTML}
@@ -226,11 +225,11 @@ function onDrawTextFrame(context, line) {
      * [Details] :
      * - Draws the visible "frame" for the currently selected text line.
      *
-     * [Purpose]:
+     * [Purpose] :
      * - Renders a highlighted rectangular outline on the canvas to indicate which text line is currently active for editing.
      * - The frame is derived from the logical bounding "box" stored in `line.box`.
      *
-     * [Difference vs. "Box"]:
+     * [Difference vs. "Box"] :
      * - The "box" is purely logical data (used for hit detection and positioning).
      * - The "frame" is the visual representation of the box on the canvas.
      **/
@@ -356,7 +355,7 @@ function onSwitchLine() {
 }
 
 function onCanvasClick(event) {
-    const meme = getMeme();
+    const meme     = getMeme();
     const { x, y } = getCanvasCoords(event);
 
     const clickedLineIdx = meme.lines.findIndex(line => isPointInLineBox(x, y, line));
@@ -383,6 +382,7 @@ function onUpdateEditorInputs() {
     if (elMemeColorInput) elMemeColorInput.value = selectedLine.color || DEFAULT_COLOR;
     if (elFontSelect)     elFontSelect.value     = selectedLine.font  || DEFAULT_FONT;
     if (elAlignSelect)    elAlignSelect.value    = selectedLine.align || DEFAULT_ALIGN;
+
     if (elMemeTextInput && selectedLine.caretIndex !== undefined) {
         elMemeTextInput.setSelectionRange(selectedLine.caretIndex, selectedLine.caretIndex);
     }
@@ -453,6 +453,7 @@ function onCanvasMouseMove(event) {
     elCanvas.style.cursor = isOverText ? 'pointer' : 'default';
 
     if (!gDragState.isDragging) return;
+
     onDragTo(x, y);
 }
 

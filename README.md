@@ -2,6 +2,7 @@
 
 ## 📌 Overview 📌
 The **Ultimate Meme Generator** is a web application that allows users to select an image, add custom text, and download their personalized meme.
+
 The app consists of two main UI sections - **Image Gallery** and **Meme Editor** - both implemented on the same web page.
 
 Users Can :

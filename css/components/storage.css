@@ -4,8 +4,8 @@
 
 .saved-memes-section {
     box-sizing: border-box;
-    max-width: 800px;
     height: 100%;
+    max-width: 800px;
     width: 100%;
 }
 
@@ -74,5 +74,5 @@
 }
 
 .saved-meme-delete:hover {
-  background: #ff4d4f;
+    background: #ff4d4f;
 }

@@ -15,7 +15,7 @@ function saveMeme() {
     let emptyList = [];
     const memes   = loadFromStorage(MEME_STORAGE_KEY) || emptyList;
 
-    const elCanvas      = document.querySelector('.meme-canvas');
+    const elCanvas = document.querySelector('.meme-canvas');
     if (!elCanvas) {
         alert('[Error] Cannot Save Meme - No Image Selected !');
         return;

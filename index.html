@@ -10,6 +10,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ultimate Meme Generator</title>
     <link rel="stylesheet" href="css/layout/main.css" />
+    <link rel="icon" type="image/png" sizes="32x32" href="img/meme_generator_icon/meme_generator_icon.png">
 </head>
 
 <body onload="onInit()">
@@ -26,31 +27,44 @@
             <!-- Gallery -->
             <section class="gallery-section">
                 <h2>Image Gallery</h2>
+
+                <!-- Gallery Filter -->
                 <div class="gallery-filter">
                     <input list="gallery-keywords" class="gallery-search" placeholder="Filter Images ..."
                            oninput="onGallerySearch(this.value); onGallerySuggest(this.value); onToggleClearButton(this.value)">
                     <datalist id="gallery-keywords" class="gallery-keywords"></datalist>
                     <button class="clear-filter disabled" onclick="onClearGalleryFilter()" disabled>Clear</button>
                 </div>
+
+                <!-- Gallery Keywords Cloud -->
                 <div class="gallery-keyword-cloud"></div>
+
+                <!-- Gallery Actions -->
                 <div class="gallery-actions">
                     <button class="btn btn-orange btn-md-padding btn-inline btn-flexible" onclick="onRandomImage()">I'm Flexible</button>
                     <button class="btn btn-orange btn-md-padding btn-inline btn-upload-from-device" onclick="onTriggerUploadFromDevice()">Upload From Device</button>
                     <input type="file" class="file-upload-from-device" accept=".png, .jpg, .jpeg" onchange="onUserUploadImage(event)">
                 </div>
+
+                <!-- Gallery Images -->
                 <div class="gallery-container"></div>
             </section>
 
+            <!-- Meme Editor + Saved Memes -->
             <div class="editor-saved-memes-column">
 
-                <!-- Editor -->
+                <!-- Meme Editor -->
                 <section class="editor-section">
                     <h2>Meme Editor</h2>
+
+                    <!-- Meme Editor (Buttons) -->
                     <div class="editor-buttons">
                         <button class="btn btn-orange btn-lg-padding btn-inline btn-save-meme" onclick="onSaveMeme()">Save Meme</button>
                         <button class="btn btn-orange btn-lg-padding btn-inline btn-upload-meme" onclick="onUploadMeme(event)">Upload</button>
                         <button class="btn btn-orange btn-lg-padding btn-inline btn-share-meme" onclick="onWebShare()">Share</button>
                     </div>
+
+                    <!-- Canvas -->
                     <div class="editor-container"></div>
                 </section>
 
@@ -63,7 +77,7 @@
         </div>
     </main>
 
-    <!-- Script -->
+    <!-- Scripts -->
     <script src="js/controllers/main-controller.js"></script>
     <script src="js/controllers/storage-controller.js"></script>
     <script src="js/controllers/gallery-controller.js"></script>
